@@ -1,0 +1,2451 @@
+<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1"><style>:root{color-scheme:light}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#faf9f5;color:#141413}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Mon Coach · Phase Galbe 🎀</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;1,400;1,600&family=Jost:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #ffffff;
+  --bg2: #fff6f9;
+  --card: #ffffff;
+  --card2: #fdf0f4;
+  --border: #f3d3de;
+  --text: #141414;
+  --muted: #7a5a66;
+  --rose: #c2416f;
+  --rose-light: rgba(194,65,111,0.09);
+  --peach: #ebb3c6;
+  --green: #141414;
+  --green-light: #f6f2f4;
+  --gold: #8e2a50;
+  --gold-light: rgba(142,42,80,0.08);
+  --blue: #d4567f;
+  --blue-light: #fdf0f4;
+  --ink: #141414;
+  --shadow: 0 6px 22px rgba(20,20,20,0.06);
+}
+
+
+* { margin:0; padding:0; box-sizing:border-box; -webkit-tap-highlight-color:transparent; }
+
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: 'Jost', sans-serif;
+  min-height: 100vh;
+  padding-bottom: 90px;
+  transition: background 0.3s, color 0.3s;
+}
+
+/* ── HEADER ── */
+.header {
+  background: var(--card);
+  border-bottom: 1px solid var(--border);
+  padding: 16px 20px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  position: sticky;
+  top: 0;
+  z-index: 200;
+}
+.header-left h1 {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 22px;
+  font-weight: 600;
+  color: var(--text);
+}
+.header-left h1 em { font-style: italic; color: var(--rose); }
+.header-left p { font-size: 11px; color: var(--muted); font-weight: 300; margin-top: 1px; }
+
+.theme-toggle {
+  background: var(--card2);
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  padding: 6px 14px;
+  font-size: 13px;
+  cursor: pointer;
+  color: var(--text);
+  font-family: 'Jost', sans-serif;
+  transition: all 0.2s;
+}
+
+/* ── BOTTOM NAV ── */
+.bottom-nav {
+  position: fixed;
+  bottom: 0; left: 0; right: 0;
+  background: var(--card);
+  border-top: 1px solid var(--border);
+  display: flex;
+  z-index: 200;
+  padding-bottom: env(safe-area-inset-bottom);
+}
+.nav-item {
+  flex: 1;
+  padding: 12px 4px 10px;
+  text-align: center;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+.nav-item .nav-icon { font-size: 22px; display: block; margin-bottom: 3px; }
+.nav-item .nav-label { font-size: 10px; color: var(--muted); font-weight: 500; letter-spacing: 0.5px; text-transform: uppercase; }
+.nav-item.active .nav-label { color: var(--rose); }
+.nav-item.active .nav-icon { transform: translateY(-2px); }
+
+/* ── PAGES ── */
+.page { display: none; padding: 0; }
+.page.active { display: block; }
+
+/* ── TODAY BANNER ── */
+.today-banner {
+  background: linear-gradient(135deg, var(--rose) 0%, #8e2a50 100%);
+  padding: 20px;
+  margin: 16px;
+  border-radius: 18px;
+  color: white;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.today-banner-left h2 {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 26px;
+  font-weight: 600;
+  font-style: italic;
+}
+.today-banner-left p { font-size: 12px; opacity: 0.85; margin-top: 2px; font-weight: 300; }
+.today-banner-right { text-align: right; }
+.today-banner-right .kcal { font-size: 28px; font-weight: 600; }
+.today-banner-right .kcal-label { font-size: 10px; opacity: 0.7; text-transform: uppercase; letter-spacing: 1px; }
+
+/* ── SECTION TITLE ── */
+.section-title {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 0 20px;
+  margin: 20px 0 12px;
+}
+.section-title h3 {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 20px;
+  font-weight: 600;
+  color: var(--text);
+}
+.section-title h3 em { font-style: italic; color: var(--rose); }
+.section-line { flex: 1; height: 1px; background: var(--border); }
+
+/* ── DAY SELECTOR ── */
+.day-selector {
+  display: flex;
+  gap: 8px;
+  padding: 0 16px;
+  overflow-x: auto;
+  scrollbar-width: none;
+  margin-bottom: 16px;
+}
+.day-selector::-webkit-scrollbar { display: none; }
+.day-btn {
+  flex-shrink: 0;
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 10px 14px;
+  text-align: center;
+  cursor: pointer;
+  transition: all 0.2s;
+  min-width: 60px;
+}
+.day-btn .day-short { font-size: 11px; color: var(--muted); text-transform: uppercase; letter-spacing: 1px; font-weight: 500; }
+.day-btn .day-num { font-family: 'Cormorant Garamond', serif; font-size: 22px; font-weight: 600; color: var(--text); line-height: 1.1; }
+.day-btn.active { background: var(--rose); border-color: var(--rose); }
+.day-btn.active .day-short, .day-btn.active .day-num { color: white; }
+.day-btn.today { border-color: var(--rose); }
+.day-btn.today .day-num { color: var(--rose); }
+
+/* ── MEAL CARD ── */
+.meal-card {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  margin: 0 16px 12px;
+  overflow: hidden;
+}
+.meal-card-header {
+  display: flex;
+  align-items: center;
+  padding: 14px 16px 10px;
+  gap: 10px;
+  cursor: pointer;
+}
+.meal-icon { font-size: 20px; }
+.meal-title-wrap { flex: 1; }
+.meal-name { font-weight: 500; font-size: 14px; color: var(--text); }
+.meal-recipe-name { font-family: 'Cormorant Garamond', serif; font-style: italic; font-size: 15px; color: var(--rose); }
+.meal-badges { display: flex; gap: 6px; align-items: center; }
+.badge { padding: 4px 9px; border-radius: 999px; font-size: 11px; font-weight: 600; }
+.badge-k { background: var(--gold-light); color: var(--gold); }
+.badge-p { background: var(--green-light); color: var(--green); }
+.phase-card { background:linear-gradient(135deg,rgba(194,65,111,.16),rgba(235,179,198,.05)); border:1px solid rgba(194,65,111,.3); border-radius:18px; margin:16px; padding:18px; }
+.phase-top { display:flex; align-items:baseline; justify-content:space-between; gap:12px; margin-bottom:10px; }
+.phase-name { font-family:'Cormorant Garamond',serif; font-size:21px; font-style:italic; color:var(--rose); }
+.phase-count { text-align:right; }
+.phase-count b { display:block; font-family:'Cormorant Garamond',serif; font-size:24px; color:var(--text); line-height:1; }
+.phase-count span { font-size:9.5px; letter-spacing:1.5px; text-transform:uppercase; color:var(--muted); }
+.phase-goal { font-size:13px; color:var(--text); line-height:1.6; }
+.phase-focus { font-size:12px; color:var(--muted); line-height:1.6; margin-top:8px; padding-top:10px; border-top:1px solid rgba(194,65,111,.2); }
+.focus-tag { display:inline-block; margin-top:4px; font-size:10px; font-weight:600; letter-spacing:0.5px; padding:3px 8px; border-radius:999px; }
+.focus-fer { background:rgba(194,65,111,0.16); color:var(--rose); }
+.focus-b9 { background:var(--green-light); color:var(--green); }
+.regles-card { background:var(--card); border:1px solid var(--border); border-radius:16px; margin:0 16px 16px; overflow:hidden; }
+.regles-header { display:flex; align-items:center; gap:10px; padding:14px 16px; cursor:pointer; }
+.regles-title { flex:1; font-family:'Cormorant Garamond',serif; font-size:17px; font-style:italic; color:var(--rose); }
+.regles-body { display:none; padding:0 16px 14px; }
+.regles-body.open { display:block; }
+.regle { display:flex; gap:10px; margin-bottom:10px; font-size:13px; color:var(--muted); line-height:1.55; }
+.regle strong { color:var(--text); font-weight:500; }
+.regle-num { background:var(--rose); color:white; min-width:20px; height:20px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:10px; font-weight:700; flex-shrink:0; margin-top:2px; }
+.meal-toggle { color: var(--muted); font-size: 12px; transition: transform 0.2s; }
+.meal-toggle.open { transform: rotate(180deg); }
+
+.meal-body { display: none; padding: 0 16px 14px; }
+.meal-body.open { display: block; }
+.meal-divider { height: 1px; background: var(--border); margin-bottom: 12px; }
+.meal-item { display: flex; align-items: center; gap: 8px; font-size: 13px; color: var(--muted); margin-bottom: 7px; }
+.meal-item::before { content:''; width:4px; height:4px; background:var(--rose); border-radius:50%; flex-shrink:0; }
+.meal-item strong { color: var(--text); font-weight: 500; }
+.meal-tip { background: var(--rose-light); border-radius: 10px; padding: 9px 12px; font-size: 12px; color: var(--rose); margin-top: 10px; }
+
+/* ── SPORT CARDS ── */
+.sport-day-card {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  margin: 0 16px 12px;
+  overflow: hidden;
+}
+.sport-day-header {
+  padding: 16px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  cursor: pointer;
+}
+.sport-day-icon { font-size: 28px; }
+.sport-day-info { flex: 1; }
+.sport-day-name { font-family: 'Cormorant Garamond', serif; font-size: 20px; font-weight: 600; color: var(--text); }
+.sport-day-name em { font-style: italic; color: var(--rose); }
+.sport-day-sub { font-size: 12px; color: var(--muted); font-weight: 300; margin-top: 2px; }
+.sport-today-badge { background: var(--rose); color: white; font-size: 10px; font-weight: 600; padding: 3px 9px; border-radius: 999px; letter-spacing: 0.5px; }
+.sport-day-toggle { color: var(--muted); transition: transform 0.2s; }
+.sport-day-toggle.open { transform: rotate(180deg); }
+
+.sport-day-body { display: none; padding: 0 16px 16px; }
+.sport-day-body.open { display: block; }
+
+.warmup {
+  background: var(--blue-light);
+  border-radius: 12px;
+  padding: 12px;
+  margin-bottom: 14px;
+  font-size: 13px;
+  color: var(--blue);
+}
+.warmup strong { font-weight: 600; font-size: 12px; text-transform: uppercase; letter-spacing: 1px; display: block; margin-bottom: 6px; }
+.warmup-item { display: flex; align-items: center; gap: 6px; margin-bottom: 4px; }
+.warmup-item::before { content:'→'; font-size: 11px; }
+
+.exercise {
+  background: var(--card2);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 14px;
+  margin-bottom: 10px;
+}
+.exercise-header { display: flex; align-items: flex-start; justify-content: space-between; margin-bottom: 8px; }
+.exercise-num { font-size: 10px; color: var(--muted); font-weight: 600; letter-spacing: 1px; text-transform: uppercase; }
+.exercise-name { font-weight: 600; font-size: 15px; color: var(--text); margin-top: 2px; }
+.exercise-sets {
+  background: var(--rose-light);
+  border-radius: 8px;
+  padding: 5px 10px;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--rose);
+  text-align: center;
+  white-space: nowrap;
+}
+.exercise-charge { font-size: 12px; color: var(--gold); font-weight: 500; margin-bottom: 8px; }
+.perf-target { font-size: 12px; color: var(--blue); background: var(--blue-light); border-radius: 8px; padding: 7px 10px; margin-bottom: 8px; line-height: 1.4; }
+.perf-target strong { font-weight: 700; }
+.exercise-tips { display: flex; flex-direction: column; gap: 4px; }
+.exercise-tip { font-size: 12px; color: var(--muted); display: flex; align-items: flex-start; gap: 6px; }
+.exercise-tip::before { content: '♡'; color: var(--rose); font-size: 11px; flex-shrink: 0; margin-top: 1px; }
+.rest-tag { display: inline-block; font-size: 11px; color: var(--muted); background: var(--card); border: 1px solid var(--border); border-radius: 6px; padding: 3px 8px; margin-top: 8px; }
+
+.stretch-section {
+  background: var(--green-light);
+  border-radius: 12px;
+  padding: 12px;
+  margin-top: 4px;
+  font-size: 13px;
+  color: var(--green);
+}
+.stretch-section strong { font-weight: 600; font-size: 12px; text-transform: uppercase; letter-spacing: 1px; display: block; margin-bottom: 6px; }
+.stretch-item { display: flex; align-items: center; gap: 6px; margin-bottom: 4px; }
+.stretch-item::before { content: '✿'; font-size: 11px; }
+
+.rest-day-card {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  margin: 0 16px 12px;
+  padding: 24px;
+  text-align: center;
+}
+.rest-day-card .rest-icon { font-size: 40px; margin-bottom: 10px; }
+.rest-day-card h3 { font-family: 'Cormorant Garamond', serif; font-size: 22px; font-weight: 600; color: var(--text); margin-bottom: 6px; }
+.rest-day-card p { font-size: 13px; color: var(--muted); font-weight: 300; line-height: 1.6; }
+
+/* ── PERF TRACKER ── */
+.perf-header-bar {
+  background: var(--card);
+  border-bottom: 1px solid var(--border);
+  padding: 16px 20px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.perf-header-bar h2 {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 22px;
+  font-weight: 600;
+}
+.perf-header-bar h2 em { font-style: italic; color: var(--rose); }
+.add-btn {
+  background: var(--rose);
+  color: white;
+  border: none;
+  border-radius: 10px;
+  padding: 8px 16px;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  font-family: 'Jost', sans-serif;
+}
+
+.perf-form {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  margin: 16px;
+  padding: 18px;
+  display: none;
+}
+.perf-form.open { display: block; }
+.perf-form h3 { font-family: 'Cormorant Garamond', serif; font-size: 18px; font-weight: 600; font-style: italic; color: var(--rose); margin-bottom: 14px; }
+
+.form-row { margin-bottom: 12px; }
+.form-label { font-size: 11px; font-weight: 600; color: var(--muted); text-transform: uppercase; letter-spacing: 1px; display: block; margin-bottom: 5px; }
+.form-input, .form-select {
+  width: 100%;
+  background: var(--card2);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 10px 14px;
+  font-size: 14px;
+  color: var(--text);
+  font-family: 'Jost', sans-serif;
+  outline: none;
+  transition: border-color 0.2s;
+}
+.form-input:focus, .form-select:focus { border-color: var(--rose); }
+.form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+.save-btn {
+  width: 100%;
+  background: var(--rose);
+  color: white;
+  border: none;
+  border-radius: 12px;
+  padding: 13px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  font-family: 'Jost', sans-serif;
+  margin-top: 6px;
+  transition: opacity 0.2s;
+}
+.save-btn:active { opacity: 0.8; }
+
+.perf-exercise-group { margin: 0 16px 16px; }
+.perf-exercise-title {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 8px;
+}
+.perf-exercise-title h4 { font-size: 13px; font-weight: 600; color: var(--text); text-transform: uppercase; letter-spacing: 0.5px; }
+.perf-count { background: var(--rose-light); color: var(--rose); font-size: 11px; font-weight: 600; padding: 2px 8px; border-radius: 999px; }
+
+.perf-entry {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 12px 14px;
+  margin-bottom: 8px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.perf-entry-left { flex: 1; }
+.perf-entry-date { font-size: 11px; color: var(--muted); font-weight: 300; margin-bottom: 3px; }
+.perf-entry-vals { display: flex; gap: 12px; }
+.perf-val { font-size: 14px; font-weight: 600; color: var(--text); }
+.perf-val span { font-size: 11px; color: var(--muted); font-weight: 400; }
+.perf-note { font-size: 12px; color: var(--muted); margin-top: 4px; font-style: italic; }
+.perf-delete { color: var(--muted); font-size: 18px; padding: 4px 8px; cursor: pointer; }
+.perf-pr { background: var(--gold-light); color: var(--gold); font-size: 10px; font-weight: 700; padding: 2px 7px; border-radius: 999px; margin-left: 6px; }
+.empty-perf { text-align: center; padding: 40px 20px; color: var(--muted); }
+.empty-perf .empty-icon { font-size: 40px; margin-bottom: 10px; }
+.empty-perf p { font-size: 14px; }
+
+/* ── TIMER ── */
+.rest-tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 11px;
+  color: var(--muted);
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  padding: 3px 8px;
+  margin-top: 8px;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+.rest-tag:active { background: var(--rose-light); color: var(--rose); }
+.timer-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(20,20,20,0.94);
+  z-index: 500;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  display: none;
+}
+.timer-overlay.open { display: flex; }
+.timer-circle {
+  width: 200px; height: 200px;
+  border-radius: 50%;
+  border: 4px solid var(--border);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 32px;
+  position: relative;
+  background: var(--card);
+}
+.timer-ring {
+  position: absolute;
+  inset: -4px;
+  border-radius: 50%;
+}
+.timer-num {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 56px;
+  font-weight: 600;
+  color: var(--text);
+  line-height: 1;
+}
+.timer-label {
+  font-size: 12px;
+  color: var(--muted);
+  margin-top: 4px;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+.timer-title {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 22px;
+  font-style: italic;
+  color: var(--rose);
+  margin-bottom: 8px;
+}
+.timer-sub { font-size: 13px; color: var(--muted); margin-bottom: 32px; }
+.timer-btn {
+  background: var(--rose);
+  color: white;
+  border: none;
+  border-radius: 14px;
+  padding: 14px 40px;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  font-family: 'Jost', sans-serif;
+  margin-bottom: 12px;
+}
+.timer-skip {
+  font-size: 13px;
+  color: var(--muted);
+  cursor: pointer;
+  padding: 8px;
+}
+
+/* ── MOBILITE ── */
+.mobilite-card {
+  background: var(--blue-light);
+  border: 1px solid rgba(212,86,127,0.2);
+  border-radius: 16px;
+  margin: 0 16px 12px;
+  overflow: hidden;
+}
+.mobilite-header {
+  display: flex;
+  align-items: center;
+  padding: 14px 16px;
+  gap: 10px;
+  cursor: pointer;
+}
+.mobilite-title { flex: 1; font-weight: 500; font-size: 14px; color: var(--blue); }
+.mobilite-sub { font-size: 12px; color: var(--blue); opacity: 0.7; }
+.mobilite-body { display: none; padding: 0 16px 14px; }
+.mobilite-body.open { display: block; }
+.mobilite-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  margin-bottom: 10px;
+  font-size: 13px;
+}
+.mobilite-item-num {
+  background: var(--blue);
+  color: white;
+  width: 20px; height: 20px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 10px;
+  font-weight: 700;
+  flex-shrink: 0;
+  margin-top: 1px;
+}
+.mobilite-item-text strong { color: var(--text); display: block; font-weight: 500; }
+.mobilite-item-text span { color: var(--muted); font-size: 12px; }
+
+/* ── RECETTES ── */
+.recette-cat { margin-bottom:24px; }
+.recette-cat-title { font-size:11px; font-weight:600; letter-spacing:2px; text-transform:uppercase; color:var(--muted); margin-bottom:10px; display:flex; align-items:center; gap:8px; }
+.recette-cat-line { flex:1; height:1px; background:var(--border); }
+.recette-card { background:var(--card); border:1px solid var(--border); border-radius:14px; margin-bottom:10px; overflow:hidden; }
+.recette-header { display:flex; align-items:center; gap:10px; padding:14px 16px 10px; cursor:pointer; }
+.recette-icon { font-size:22px; }
+.recette-name { flex:1; font-weight:500; font-size:14px; color:var(--text); }
+.recette-meta { font-size:11px; color:var(--muted); }
+.recette-toggle { color:var(--muted); transition:transform 0.2s; }
+.recette-toggle.open { transform:rotate(180deg); }
+.recette-body { display:none; padding:0 16px 14px; }
+.recette-body.open { display:block; }
+.recette-divider { height:1px; background:var(--border); margin-bottom:12px; }
+.recette-section-label { font-size:10px; font-weight:600; letter-spacing:1px; text-transform:uppercase; color:var(--rose); margin-bottom:6px; margin-top:10px; }
+.recette-ingredient { font-size:13px; color:var(--muted); margin-bottom:5px; display:flex; gap:6px; }
+.recette-ingredient::before { content:'·'; color:var(--rose); }
+.recette-ingredient strong { color:var(--text); font-weight:500; }
+.recette-step { display:flex; gap:10px; margin-bottom:8px; font-size:13px; color:var(--muted); }
+.recette-step-num { background:var(--rose); color:white; min-width:20px; height:20px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:10px; font-weight:700; flex-shrink:0; margin-top:1px; }
+.recette-tip { background:var(--rose-light); border-radius:8px; padding:8px 12px; font-size:12px; color:var(--rose); margin-top:10px; }
+
+/* ── COURSES ── */
+.courses-cat { margin-bottom:20px; }
+.courses-cat-title { font-size:11px; font-weight:600; letter-spacing:2px; text-transform:uppercase; color:var(--muted); margin-bottom:8px; display:flex; align-items:center; gap:8px; }
+.courses-cat-line { flex:1; height:1px; background:var(--border); }
+.courses-grid { display:grid; grid-template-columns:1fr 1fr; gap:8px; }
+.course-item { background:var(--card); border:1px solid var(--border); border-radius:12px; padding:12px 14px; display:flex; align-items:center; gap:8px; cursor:pointer; transition:all 0.15s; }
+.course-check { width:20px; height:20px; border:2px solid var(--border); border-radius:6px; flex-shrink:0; display:flex; align-items:center; justify-content:center; transition:all 0.15s; }
+.course-item.checked .course-check { background:var(--green); border-color:var(--green); }
+.course-item.checked .course-check::after { content:'✓'; color:white; font-size:12px; font-weight:700; }
+.course-item.checked .course-name { text-decoration:line-through; color:var(--muted); }
+.course-name { font-size:13px; font-weight:500; color:var(--text); }
+.course-qty { font-size:11px; color:var(--muted); font-weight:300; margin-top:1px; }
+
+/* ══════════ REFONTE NOIR & ROSE ══════════ */
+html { background:#fff; }
+body { background:#fff; padding-bottom:96px; }
+.page { max-width:760px; margin:0 auto; }
+.page.active { animation: fade .25s ease; }
+@keyframes fade { from { opacity:0; transform:translateY(4px);} to { opacity:1; transform:none; } }
+
+.hero { background:var(--ink); color:#fff; padding:22px 20px 20px; border-radius:0 0 28px 28px; }
+.hero-in { max-width:720px; margin:0 auto; }
+.hero-top { display:flex; justify-content:space-between; align-items:baseline; gap:12px; }
+.brand { font-family:'Cormorant Garamond',serif; font-size:26px; font-weight:600; letter-spacing:.2px; }
+.brand em { color:var(--peach); font-style:italic; }
+.hero-date { font-size:12px; color:#d9c3cb; text-align:right; }
+.hero-count { display:flex; align-items:center; gap:14px; margin-top:16px; }
+.hero-count b { font-family:'Cormorant Garamond',serif; font-size:64px; line-height:.9; font-weight:600; color:#f2a9c2; }
+.hero-count span { font-size:13px; line-height:1.4; color:#fff; }
+.hero-count i { font-family:'Cormorant Garamond',serif; font-size:17px; color:#f2a9c2; }
+.hero-phase { display:inline-flex; align-items:center; gap:6px; margin-top:16px; background:rgba(255,255,255,.08); border:1px solid rgba(242,169,194,.35); color:#fbe4ec; font-size:12px; font-weight:500; letter-spacing:.4px; padding:6px 12px; border-radius:999px; }
+
+.subnav { position:sticky; top:0; z-index:150; background:rgba(255,255,255,.94); -webkit-backdrop-filter:blur(10px); backdrop-filter:blur(10px); border-bottom:1px solid var(--border); }
+.subnav-in { max-width:760px; margin:0 auto; display:flex; gap:8px; padding:12px 16px; overflow-x:auto; scrollbar-width:none; }
+.subnav-in::-webkit-scrollbar { display:none; }
+.chip { flex-shrink:0; border:1.5px solid var(--ink); background:#fff; color:var(--ink); font-family:'Jost',sans-serif; font-size:13px; font-weight:500; padding:8px 16px; border-radius:999px; cursor:pointer; }
+.chip.active { background:var(--ink); color:#fff; }
+
+.bottom-nav { background:var(--ink); border-top:none; left:12px; right:12px; bottom:12px; border-radius:22px; box-shadow:0 10px 30px rgba(20,20,20,.25); padding-bottom:0; max-width:520px; margin:0 auto; }
+@supports (bottom: env(safe-area-inset-bottom)) { .bottom-nav { bottom:calc(12px + env(safe-area-inset-bottom)); } }
+.bottom-in { display:flex; width:100%; padding:6px; gap:6px; }
+.nav-item { border-radius:16px; padding:9px 4px 8px; display:flex; align-items:center; justify-content:center; gap:8px; }
+.nav-item .nav-icon { font-size:18px; margin:0; display:inline; }
+.nav-item .nav-label { color:#cdb6bf; font-size:12px; letter-spacing:.8px; }
+.nav-item.active { background:#fff; }
+.nav-item.active .nav-label { color:var(--ink); font-weight:600; }
+.nav-item.active .nav-icon { transform:none; }
+
+.section-title { padding:22px 20px 10px; }
+.section-title h3 { font-size:24px; }
+
+.today-session { margin:18px 16px 4px; background:var(--rose); color:#fff; border-radius:22px; padding:20px 20px 18px; cursor:pointer; box-shadow:0 10px 26px rgba(194,65,111,.25); }
+.ts-k { font-size:11px; letter-spacing:1.6px; text-transform:uppercase; font-weight:600; opacity:.85; }
+.ts-t { font-family:'Cormorant Garamond',serif; font-size:32px; font-weight:600; line-height:1.05; margin-top:6px; }
+.ts-s { font-size:13px; margin-top:6px; opacity:.92; line-height:1.45; }
+.ts-go { display:inline-block; margin-top:14px; background:#fff; color:var(--ink); font-size:12px; font-weight:600; padding:7px 14px; border-radius:999px; }
+
+.phase-card { background:#fff; border:1.5px solid var(--ink); }
+.phase-name { color:var(--ink); }
+.phase-count b { color:var(--rose); }
+.phase-focus { border-top-color:var(--border); }
+
+.today-banner { background:var(--ink); border-radius:22px; }
+.today-banner-left h2 { color:#fff; }
+.today-banner-right .kcal { color:#f2a9c2; }
+
+.sport-day-card, .meal-card, .regles-card, .recette-card, .perf-entry, .course-item, .rest-day-card { box-shadow:var(--shadow); }
+.sport-day-card, .meal-card { border-radius:20px; scroll-margin-top:72px; }
+.perf-exercise-group:first-of-type { margin-top:8px; }
+.sport-day-name em { color:var(--rose); }
+.sport-today-badge { background:var(--ink); }
+.exercise { background:var(--bg2); border:1px solid var(--border); border-radius:16px; }
+.exercise-sets { background:var(--ink); color:#fff; }
+.perf-target { color:var(--gold); }
+.warmup { color:var(--gold); }
+
+.day-btn { border-radius:16px; }
+.day-btn.active { background:var(--ink); border-color:var(--ink); }
+.day-btn.today:not(.active) { border-color:var(--rose); }
+
+.perf-header-bar { background:#fff; border-bottom:none; padding:22px 20px 6px; }
+.perf-header-bar h2 { font-size:28px; }
+.add-btn, .save-btn { background:var(--ink); color:#fff; }
+.form-input, .form-select { background:#fff; color:var(--text); }
+
+.mobilite-card { border-color:var(--border); }
+.regle-num, .recette-step-num, .mobilite-item-num { background:var(--rose); }
+.course-item.checked { background:var(--bg2); }
+.course-item.checked .course-check { background:var(--rose); border-color:var(--rose); }
+
+.timer-circle { border-color:#f2a9c2; }
+.timer-title { color:#f2a9c2; }
+.timer-sub, .timer-label, .timer-skip { color:#d9c3cb; }
+
+@media (min-width: 900px) {
+  .page, .subnav-in { max-width:860px; }
+  .hero-in { max-width:828px; }
+  .hero-count b { font-size:76px; }
+  .courses-grid { grid-template-columns:repeat(3,1fr); }
+}
+</style>
+<header class="hero">
+  <div class="hero-in">
+    <div class="hero-top">
+      <div class="brand">Mon <em>Coach</em></div>
+      <div class="hero-date" id="header-date"></div>
+    </div>
+    <div class="hero-count">
+      <b id="hero-days">—</b>
+      <span>jours avant mon mariage<br><i>29 octobre 2027</i></span>
+    </div>
+    <div class="hero-phase" id="hero-phase"></div>
+  </div>
+</header>
+
+<nav class="subnav" id="subnav"></nav>
+
+<!-- ══════════════════════════════════════ TIMER OVERLAY -->
+<div class="timer-overlay" id="timer-overlay">
+  <div class="timer-title">Temps de repos</div>
+  <div class="timer-sub" id="timer-exercise-name">Hip Thrust</div>
+  <div class="timer-circle">
+    <div class="timer-num" id="timer-display">90</div>
+    <div class="timer-label">secondes</div>
+  </div>
+  <button class="timer-btn" id="timer-btn" onclick="toggleTimer()">▶ Démarrer</button>
+  <div class="timer-skip" onclick="closeTimer()">Passer ✕</div>
+</div>
+
+<!-- ══════════════════════════════════════ PAGE NUTRITION -->
+<div class="page active" id="page-nutrition">
+
+  <div id="today-banner"></div>
+
+  <div class="section-title" style="margin-top:8px;">
+    <h3>Plan <em>Nutrition</em></h3>
+    <div class="section-line"></div>
+  </div>
+
+  <div class="regles-card">
+    <div class="regles-header" onclick="toggleRegles()">
+      <span style="font-size:20px;">🩷</span>
+      <div class="regles-title">Mes 5 règles fer &amp; B9</div>
+      <span id="regles-toggle" style="color:var(--muted);transition:transform 0.2s;">▼</span>
+    </div>
+    <div class="regles-body" id="regles-body">
+      <div style="height:1px;background:var(--border);margin-bottom:12px;"></div>
+      <div class="regle"><div class="regle-num">1</div><div><strong>Toujours de la vitamine C avec le fer.</strong> Citron, poivron, orange, kiwi, tomate : c'est ce qui rend le fer des lentilles et des légumes réellement absorbable.</div></div>
+      <div class="regle"><div class="regle-num">2</div><div><strong>Ni thé ni café pendant et juste après les repas.</strong> Ils bloquent une grande partie de l'absorption du fer. Décale-les d'une heure ou deux.</div></div>
+      <div class="regle"><div class="regle-num">3</div><div><strong>Les laitages à distance des repas riches en fer.</strong> Le calcium freine l'absorption — garde le fromage blanc pour les collations.</div></div>
+      <div class="regle"><div class="regle-num">4</div><div><strong>Les légumes verts jamais trop cuits.</strong> La B9 est détruite par la chaleur et part dans l'eau de cuisson : vapeur courte, poêle 2 min, ou cru.</div></div>
+      <div class="regle"><div class="regle-num">5</div><div><strong>Le traitement passe avant l'assiette.</strong> L'alimentation soutient, elle ne remplace pas ce que ton médecin t'a prescrit.</div></div>
+    </div>
+  </div>
+
+  <div class="regles-card">
+    <div class="regles-header" onclick="togglePrep()">
+      <span style="font-size:20px;">🤍</span>
+      <div class="regles-title">Mes 2 sessions meal-prep</div>
+      <span id="prep-toggle" style="color:var(--muted);transition:transform 0.2s;">▼</span>
+    </div>
+    <div class="regles-body" id="prep-body">
+      <div style="height:1px;background:var(--border);margin-bottom:12px;"></div>
+      <div class="regle"><div class="regle-num">1</div><div><strong>Samedi 14h — grande session (1h30), après les courses.</strong> Tu cuisines 3 plats d'un coup : poulet citron-poivre, pommes de terre et haricots verts (×4), bœuf & purée (×2), chili poulet (×2), plus 6 œufs durs et le gâteau au skyr. Ça couvre samedi soir, dimanche, lundi, mardi et mercredi midi.</div></div>
+      <div class="regle"><div class="regle-num">2</div><div><strong>Mercredi soir — petite session (~30 min en rentrant), dès le 2 novembre.</strong> Tu cuisines le chili bœuf et le poisson & riz. Ça couvre mercredi soir, jeudi et vendredi. En octobre, jeudi et vendredi midi : cantine.</div></div>
+      <div class="regle"><div class="regle-num">3</div><div><strong>Congélateur : les boîtes de mardi et mercredi.</strong> Tu les sors la veille au soir, elles décongèlent au frigo. Dimanche, zéro cuisine : c'est ton vrai jour off.</div></div>
+      <div class="regle"><div class="regle-num">4</div><div><strong>Le lundi, mardi, jeudi, vendredi : zéro cuisine.</strong> Tu sors juste la boîte du frigo et tu réchauffes, midi et soir.</div></div>
+    </div>
+  </div>
+
+  <div class="day-selector" id="nutrition-days"></div>
+  <div id="nutrition-content"></div>
+
+</div>
+
+<!-- ══════════════════════════════════════ PAGE SPORT -->
+<div class="page" id="page-sport">
+
+  <div id="today-session"></div>
+  <div id="phase-banner-sport"></div>
+
+  <div class="section-title">
+    <h3>Ma <em>semaine</em></h3>
+    <div class="section-line"></div>
+  </div>
+  <div class="regles-card week-note" style="padding:14px 16px;">
+    <div style="font-size:13px;color:var(--text);line-height:1.6;">Lundi · Mardi · Samedi = mes 3 séances minimum (19h en semaine).<br>Mes fessiers sont travaillés 3 fois : lourd lundi, finisher léger mardi, volume samedi.<br>Vendredi = bonus cardio et haut du corps, sans fessiers.<br>Mercredi et jeudi : pas de salle.</div>
+    <div style="font-size:12px;color:var(--muted);line-height:1.6;margin-top:8px;padding-top:8px;border-top:1px solid var(--border);">Jusqu'à fin novembre, je reprends : bas de la fourchette, aucun record.</div>
+  </div>
+
+  <!-- MOBILITÉ MATIN -->
+  <div class="mobilite-card">
+    <div class="mobilite-header" onclick="toggleMobilite()">
+      <span style="font-size:20px;">🌸</span>
+      <div style="flex:1">
+        <div class="mobilite-title">Routine Mobilité · Chaque matin</div>
+        <div class="mobilite-sub">10 min · Souplesse & posture · Tous les jours</div>
+      </div>
+      <span id="mobilite-toggle" style="color:var(--blue);transition:transform 0.2s;">▼</span>
+    </div>
+    <div class="mobilite-body" id="mobilite-body">
+      <div style="font-size:12px;color:var(--blue);margin-bottom:12px;padding:8px 12px;background:rgba(212,86,127,0.08);border-radius:8px;">
+        💗 Tous les matins au réveil, même les jours de repos. En 6–8 semaines tu seras vraiment plus souple !
+      </div>
+      <div class="mobilite-item">
+        <div class="mobilite-item-num">1</div>
+        <div class="mobilite-item-text">
+          <strong>Chat / Vache</strong>
+          <span>10 répétitions · à 4 pattes, arrondir puis creuser le dos · respirer lentement</span>
+        </div>
+      </div>
+      <div class="mobilite-item">
+        <div class="mobilite-item-num">2</div>
+        <div class="mobilite-item-text">
+          <strong>90/90 Hanches</strong>
+          <span>1 min chaque côté · assis au sol, jambes à 90° · meilleur exercice pour les hanches</span>
+        </div>
+      </div>
+      <div class="mobilite-item">
+        <div class="mobilite-item-num">3</div>
+        <div class="mobilite-item-text">
+          <strong>Pigeon Stretch</strong>
+          <span>1 min chaque côté · une jambe pliée devant, l'autre derrière · relâcher les fessiers</span>
+        </div>
+      </div>
+      <div class="mobilite-item">
+        <div class="mobilite-item-num">4</div>
+        <div class="mobilite-item-text">
+          <strong>Étirement Psoas</strong>
+          <span>45 sec chaque côté · fente basse, bassin vers l'avant · contre la cambrure</span>
+        </div>
+      </div>
+      <div class="mobilite-item">
+        <div class="mobilite-item-num">5</div>
+        <div class="mobilite-item-text">
+          <strong>Rotation Thoracique</strong>
+          <span>10 reps · à 4 pattes, une main derrière la tête · ouvre le dos et les épaules</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div id="sport-content"></div>
+
+</div>
+
+<!-- ══════════════════════════════════════ PAGE PERFO -->
+<div class="page" id="page-perf">
+
+  <div class="perf-header-bar">
+    <h2>Mes <em>Perfs</em></h2>
+    <button class="add-btn" onclick="togglePerfForm()">+ Ajouter</button>
+  </div>
+
+  <div class="perf-form" id="perf-form">
+    <h3>Nouvelle entrée</h3>
+
+    <!-- Exercice -->
+    <div class="form-row">
+      <label class="form-label">Exercice</label>
+      <select class="form-select" id="perf-exercise">
+        <option>Hip Thrust</option>
+        <option>Élévations latérales</option>
+        <option>Presse pieds hauts</option>
+        <option>Abducteur penché avant</option>
+        <option>Sumo Squat</option>
+        <option>Presse</option>
+        <option>Abducteur</option>
+        <option>Leg Extension</option>
+        <option>RDL</option>
+        <option>Bulgarian Split Squat</option>
+        <option>Montées sur banc</option>
+        <option>Leg Curl</option>
+        <option>Tirage Vertical</option>
+        <option>Tirage Horizontal</option>
+        <option>Face Pull</option>
+        <option>Développé Épaules</option>
+        <option>Curl Biceps</option>
+        <option>Kickback Diagonal</option>
+        <option>Kickback Poulie</option>
+        <option>Frog Pumps</option>
+        <option>Glute Bridge</option>
+        <option>Fentes arrière alternées</option>
+        <option>Donkey Kicks</option>
+        <option>Suitcase Carry</option>
+      </select>
+    </div>
+
+    <!-- Toggle mode -->
+    <div class="form-row">
+      <label class="form-label">Type de séries</label>
+      <div style="display:flex;gap:8px;">
+        <button id="btn-equal" onclick="setSetsMode('equal')"
+          style="flex:1;padding:10px;border-radius:10px;border:2px solid var(--rose);background:var(--rose);color:white;font-family:'Jost',sans-serif;font-size:13px;font-weight:600;cursor:pointer;">
+          = Séries égales
+        </button>
+        <button id="btn-progressive" onclick="setSetsMode('progressive')"
+          style="flex:1;padding:10px;border-radius:10px;border:2px solid var(--border);background:var(--card2);color:var(--muted);font-family:'Jost',sans-serif;font-size:13px;font-weight:600;cursor:pointer;">
+          ↑ Progressives
+        </button>
+      </div>
+    </div>
+
+    <!-- MODE ÉGAL -->
+    <div id="mode-equal">
+      <div class="form-grid">
+        <div class="form-row">
+          <label class="form-label">Charge (kg)</label>
+          <input class="form-input" type="number" id="perf-weight" placeholder="ex: 50" step="0.5">
+        </div>
+        <div class="form-row">
+          <label class="form-label">Répétitions</label>
+          <input class="form-input" type="number" id="perf-reps" placeholder="ex: 8">
+        </div>
+      </div>
+      <div class="form-row">
+        <label class="form-label">Nombre de séries</label>
+        <input class="form-input" type="number" id="perf-sets" placeholder="ex: 4">
+      </div>
+    </div>
+
+    <!-- MODE PROGRESSIF -->
+    <div id="mode-progressive" style="display:none;">
+      <div id="progressive-series"></div>
+      <button onclick="addProgressiveSerie()"
+        style="width:100%;padding:10px;border-radius:10px;border:1px dashed var(--border);background:transparent;color:var(--rose);font-family:'Jost',sans-serif;font-size:13px;font-weight:600;cursor:pointer;margin-bottom:12px;">
+        + Ajouter une série
+      </button>
+    </div>
+
+    <!-- Notes -->
+    <div class="form-row">
+      <label class="form-label">Notes (optionnel)</label>
+      <input class="form-input" type="text" id="perf-notes" placeholder="ex: bonne sensation, technique ok...">
+    </div>
+
+    <button class="save-btn" onclick="savePerf()">Enregistrer 🎀</button>
+  </div>
+
+  <div id="perf-content"></div>
+
+</div>
+
+<!-- ══════════════════════════════════════ PAGE RECETTES -->
+<div class="page" id="page-recettes">
+  <div class="perf-header-bar">
+    <h2>Mes <em>Recettes</em></h2>
+  </div>
+  <div id="recettes-content" style="padding:16px;"></div>
+</div>
+
+<!-- ══════════════════════════════════════ PAGE MENSURATIONS -->
+<div class="page" id="page-mensurations">
+  <div class="perf-header-bar">
+    <h2>Mes <em>Mensurations</em></h2>
+    <button class="add-btn" onclick="toggleMensForm()">+ Ajouter</button>
+  </div>
+
+  <div class="perf-form" id="mens-form">
+    <h3>Nouvelle mesure</h3>
+    <div style="font-size:12px;color:var(--muted);margin-bottom:14px;font-weight:300;">Mesure le matin à jeun, toujours dans les mêmes conditions 🌸</div>
+    <div class="form-grid">
+      <div class="form-row">
+        <label class="form-label">Poids (kg)</label>
+        <input class="form-input" type="number" id="mens-poids" placeholder="ex: 73" step="0.1">
+      </div>
+      <div class="form-row">
+        <label class="form-label">Tour de taille (cm)</label>
+        <input class="form-input" type="number" id="mens-taille" placeholder="ex: 78" step="0.5">
+      </div>
+      <div class="form-row">
+        <label class="form-label">Tour de hanches (cm)</label>
+        <input class="form-input" type="number" id="mens-hanches" placeholder="ex: 102" step="0.5">
+      </div>
+      <div class="form-row">
+        <label class="form-label">Tour de cuisses (cm)</label>
+        <input class="form-input" type="number" id="mens-cuisses" placeholder="ex: 60" step="0.5">
+      </div>
+      <div class="form-row">
+        <label class="form-label">Tour de bras (cm)</label>
+        <input class="form-input" type="number" id="mens-bras" placeholder="ex: 30" step="0.5">
+      </div>
+      <div class="form-row">
+        <label class="form-label">% Masse grasse</label>
+        <input class="form-input" type="number" id="mens-grasse" placeholder="ex: 32.7" step="0.1">
+      </div>
+    </div>
+    <div class="form-row">
+      <label class="form-label">Notes (optionnel)</label>
+      <input class="form-input" type="text" id="mens-notes" placeholder="ex: début du cycle, après vacances...">
+    </div>
+    <button class="save-btn" onclick="saveMens()">Enregistrer 🩷</button>
+  </div>
+
+  <div id="mens-content"></div>
+</div>
+
+<!-- ══════════════════════════════════════ PAGE COURSES -->
+<div class="page" id="page-courses">
+  <div class="perf-header-bar">
+    <h2>Liste de <em>Courses</em></h2>
+    <button class="add-btn" onclick="resetCourses()" style="background:var(--card2);color:var(--muted);border:1px solid var(--border);">↺ Reset</button>
+  </div>
+  <p style="padding:12px 20px 0;font-size:12px;color:var(--muted);font-weight:300;">Pour toute la semaine · exactement les plats du planning · coche au fur et à mesure 🩷</p>
+  <div id="courses-content" style="padding:16px;"></div>
+</div>
+
+<!-- ══════════════════════════════════════ PAGE MOBILITE CORPS -->
+<div class="page" id="page-mobilite">
+  <div class="perf-header-bar">
+    <h2>Corps & <em>Mobilité</em> 🌸</h2>
+  </div>
+
+  <!-- Planning semaine -->
+  <div style="padding:16px 16px 0;">
+    <div style="background:var(--card);border:1px solid var(--border);border-radius:16px;padding:16px;margin-bottom:16px;">
+      <div style="font-family:'Cormorant Garamond',serif;font-size:18px;font-style:italic;color:var(--rose);margin-bottom:12px;">🖤 Planning semaine</div>
+      <div style="display:flex;flex-direction:column;gap:0;">
+        <div style="display:flex;align-items:center;gap:10px;padding:8px 0;border-bottom:1px solid var(--border);">
+          <span style="font-size:12px;font-weight:600;color:var(--muted);min-width:70px;">Lundi</span>
+          <span style="flex:1;font-size:13px;color:var(--text);">Programme complet</span>
+          <span style="font-size:11px;padding:3px 8px;border-radius:999px;background:var(--rose-light);color:var(--rose);">30 min</span>
+        </div>
+        <div style="display:flex;align-items:center;gap:10px;padding:8px 0;border-bottom:1px solid var(--border);">
+          <span style="font-size:12px;font-weight:600;color:var(--muted);min-width:70px;">Mardi</span>
+          <span style="flex:1;font-size:13px;color:var(--text);">Programme complet</span>
+          <span style="font-size:11px;padding:3px 8px;border-radius:999px;background:var(--rose-light);color:var(--rose);">30 min</span>
+        </div>
+        <div style="display:flex;align-items:center;gap:10px;padding:8px 0;border-bottom:1px solid var(--border);">
+          <span style="font-size:12px;font-weight:600;color:var(--muted);min-width:70px;">Mercredi</span>
+          <span style="flex:1;font-size:13px;color:var(--text);">Mobilité active seulement</span>
+          <span style="font-size:11px;padding:3px 8px;border-radius:999px;background:var(--card2);color:var(--muted);">10 min</span>
+        </div>
+        <div style="display:flex;align-items:center;gap:10px;padding:8px 0;border-bottom:1px solid var(--border);">
+          <span style="font-size:12px;font-weight:600;color:var(--muted);min-width:70px;">Jeudi</span>
+          <span style="flex:1;font-size:13px;color:var(--text);">Mobilité active seulement</span>
+          <span style="font-size:11px;padding:3px 8px;border-radius:999px;background:var(--card2);color:var(--muted);">10 min</span>
+        </div>
+        <div style="display:flex;align-items:center;gap:10px;padding:8px 0;border-bottom:1px solid var(--border);">
+          <span style="font-size:12px;font-weight:600;color:var(--muted);min-width:70px;">Vendredi</span>
+          <span style="flex:1;font-size:13px;color:var(--text);">Programme complet</span>
+          <span style="font-size:11px;padding:3px 8px;border-radius:999px;background:var(--rose-light);color:var(--rose);">30 min</span>
+        </div>
+        <div style="display:flex;align-items:center;gap:10px;padding:8px 0;border-bottom:1px solid var(--border);">
+          <span style="font-size:12px;font-weight:600;color:var(--muted);min-width:70px;">Samedi</span>
+          <span style="flex:1;font-size:13px;color:var(--text);">Programme complet</span>
+          <span style="font-size:11px;padding:3px 8px;border-radius:999px;background:var(--rose-light);color:var(--rose);">30 min</span>
+        </div>
+        <div style="display:flex;align-items:center;gap:10px;padding:8px 0;">
+          <span style="font-size:12px;font-weight:600;color:var(--muted);min-width:70px;">Dimanche</span>
+          <span style="flex:1;font-size:13px;color:var(--text);">Repos</span>
+          <span style="font-size:11px;padding:3px 8px;border-radius:999px;background:var(--card2);color:var(--muted);">—</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Conseil clé -->
+    <div style="background:var(--blue-light);border:1px solid rgba(212,86,127,0.2);border-radius:14px;padding:14px;margin-bottom:16px;font-size:12px;color:var(--blue);line-height:1.7;">
+      💗 <strong>Fais ta séance le soir après la douche</strong> — le corps est plus chaud et plus réceptif.<br>
+      Régularité > intensité · Jamais de douleur · Bois de l'eau après 🩷
+    </div>
+
+    <!-- Ordre séance -->
+    <div style="display:flex;gap:6px;overflow-x:auto;padding-bottom:8px;margin-bottom:16px;scrollbar-width:none;">
+      <div style="flex-shrink:0;background:var(--card);border:1px solid var(--border);border-radius:10px;padding:8px 12px;font-size:11px;font-weight:600;color:var(--muted);display:flex;align-items:center;gap:6px;">
+        <span style="background:var(--rose);color:white;width:16px;height:16px;border-radius:50%;display:inline-flex;align-items:center;justify-content:center;font-size:9px;font-weight:700;">1</span>
+        🌸 Massage ventre
+      </div>
+      <div style="flex-shrink:0;background:var(--card);border:1px solid var(--border);border-radius:10px;padding:8px 12px;font-size:11px;font-weight:600;color:var(--muted);display:flex;align-items:center;gap:6px;">
+        <span style="background:var(--rose);color:white;width:16px;height:16px;border-radius:50%;display:inline-flex;align-items:center;justify-content:center;font-size:9px;font-weight:700;">2</span>
+        🌸 Massage dos
+      </div>
+      <div style="flex-shrink:0;background:var(--card);border:1px solid var(--border);border-radius:10px;padding:8px 12px;font-size:11px;font-weight:600;color:var(--muted);display:flex;align-items:center;gap:6px;">
+        <span style="background:var(--rose);color:white;width:16px;height:16px;border-radius:50%;display:inline-flex;align-items:center;justify-content:center;font-size:9px;font-weight:700;">3</span>
+        💗 Mobilité
+      </div>
+      <div style="flex-shrink:0;background:var(--card);border:1px solid var(--border);border-radius:10px;padding:8px 12px;font-size:11px;font-weight:600;color:var(--muted);display:flex;align-items:center;gap:6px;">
+        <span style="background:var(--rose);color:white;width:16px;height:16px;border-radius:50%;display:inline-flex;align-items:center;justify-content:center;font-size:9px;font-weight:700;">4</span>
+        🌸 Étirements
+      </div>
+    </div>
+  </div>
+
+  <div id="mobilite-corps-content" style="padding:0 16px 16px;"></div>
+</div>
+
+<!-- ══════════════════════════════════════ BOTTOM NAV -->
+<div class="bottom-nav">
+  <div class="bottom-in">
+    <div class="nav-item" data-group="sport" onclick="showGroup('sport')">
+      <span class="nav-icon">🎀</span><span class="nav-label">Sport</span>
+    </div>
+    <div class="nav-item" data-group="assiette" onclick="showGroup('assiette')">
+      <span class="nav-icon">🩷</span><span class="nav-label">Assiette</span>
+    </div>
+    <div class="nav-item" data-group="suivi" onclick="showGroup('suivi')">
+      <span class="nav-icon">🖤</span><span class="nav-label">Suivi</span>
+    </div>
+  </div>
+</div>
+
+<script>
+// ══════════════════════════════════════════════════════
+// DATA
+// ══════════════════════════════════════════════════════
+
+const DAYS = ['Dimanche','Lundi','Mardi','Mercredi','Jeudi','Vendredi','Samedi'];
+const DAYS_SHORT = ['Dim','Lun','Mar','Mer','Jeu','Ven','Sam'];
+
+const nutrition = {
+  1: { // Lundi — fessiers lourd
+    label: 'Fessiers lourd 🎀',
+    kcal: 1850, prot: 124,
+    meals: [
+      { icon:'🌸', name:'Petit-déjeuner', recipe:'Pancakes, fraises & skyr', kcal:520, prot:30, focus:null,
+        items:['Flocons d\'avoine mixés — 50g','Œufs — 2','Skyr — 100g','Fraises — 100g','Miel — 1 càc'],
+        tip:'💗 Pâte préparée la veille · skyr et fraises par-dessus au moment de servir' },
+      { icon:'🩷', name:'Déjeuner', recipe:'Bowl bœuf & purée', kcal:620, prot:40, focus:'fer',
+        items:['🤍 Portion préparée samedi','À emporter au travail dans une boîte','Réchauffe 2-3 min au micro-ondes'],
+        tip:'🩷 Cuisiné pendant ta session du samedi — zéro cuisine aujourd\'hui. Ce soir, sors du congélateur la boîte de demain.' },
+      { icon:'💗', name:'Collation', recipe:'Skyr & fruit', kcal:210, prot:22, focus:null,
+        items:['Skyr — 250g','Clémentines — 2'],
+        tip:'💗 À distance du déjeuner : le calcium freine l\'absorption du fer' },
+      { icon:'🖤', name:'Dîner', recipe:'Bowl bœuf & purée', kcal:500, prot:32, focus:'fer',
+        items:['🤍 L\'autre portion de la session de samedi','Réchauffe 5 min'], tip:null }
+    ]
+  },
+  2: { // Mardi — haut du corps
+    label: 'Haut du corps + fessiers légers 💖',
+    kcal: 1800, prot: 120,
+    meals: [
+      { icon:'🌸', name:'Petit-déjeuner', recipe:'Porridge nature, œuf & fruit', kcal:480, prot:21, focus:null,
+        items:['Flocons d\'avoine — 60g','Lait — 150 ml','Œuf — 1 (cuit à côté)','Orange — 1','Miel — 1 càc'],
+        tip:'💗 Rien de mélangé : le porridge nature, l\'œuf à côté, le fruit à part' },
+      { icon:'🩷', name:'Déjeuner', recipe:'Bowl chili', kcal:580, prot:40, focus:'fer+b9',
+        items:['🤍 Portion préparée samedi (sortie du congélateur hier soir)','À emporter au travail','Réchauffe 2-3 min'],
+        tip:'🩷 Ton repas B9 de la semaine — cuisiné samedi, juste à réchauffer. Ce soir, sors la boîte de mercredi.' },
+      { icon:'💗', name:'Collation', recipe:'Skyr & fruit', kcal:210, prot:22, focus:null,
+        items:['Skyr — 250g','Clémentines — 2'], tip:null },
+      { icon:'🖤', name:'Dîner', recipe:'Bowl chili', kcal:530, prot:37, focus:'fer+b9',
+        items:['🤍 L\'autre portion de samedi','Réchauffe 5 min'], tip:null }
+    ]
+  },
+  3: { // Mercredi — pas de salle, meal prep
+    label: 'Marche & meal prep 🤍',
+    kcal: 1850, prot: 113,
+    meals: [
+      { icon:'🩷', name:'Petit-déjeuner', recipe:'Œufs brouillés, avocat & tartine', kcal:520, prot:26, focus:null,
+        items:['Œufs — 3','Poivron & tomate coupés fin','Avocat — ½','Pain complet — 1 tranche'],
+        tip:'🌷 L\'avocat apporte de la B9 — et il rend le petit-déjeuner beaucoup plus rassasiant' },
+      { icon:'🩷', name:'Déjeuner', recipe:'Bowl poulet citron-poivre & pommes de terre', kcal:580, prot:42, focus:null,
+        items:['🤍 Dernière portion, préparée samedi (sortie du congélateur hier soir)','À emporter au travail','Réchauffe 2-3 min'],
+        tip:'💗 4e et dernière portion de la session du samedi — encore zéro cuisine' },
+      { icon:'💗', name:'Collation', recipe:'Part de gâteau au skyr', kcal:260, prot:10, focus:null,
+        items:['Gâteau au skyr nature — 2 parts'], tip:null },
+      { icon:'🖤', name:'Dîner', recipe:'Bowl chili', kcal:490, prot:35, focus:'fer+b9',
+        items:['Viande hachée 5% — 120g, bien dorée','Haricots rouges façon chili — 1 boîte','Riz — 45g cru','Poivron — ½','Salade tomate-concombre','Oignons frits — 1 càs'],
+        tip:'💗 SESSION MEAL-PREP N°2, dès le 2 novembre : en rentrant, cuisine le chili bœuf (×3) et le poisson-riz (×2) — ce soir, jeudi et vendredi (~30 min). En octobre, jeudi et vendredi midi : cantine.' }
+    ]
+  },
+  4: { // Jeudi
+    label: 'Marche & mobilité 🩷',
+    kcal: 1800, prot: 108,
+    meals: [
+      { icon:'🌸', name:'Petit-déjeuner', recipe:'Pancakes, fraises & skyr', kcal:520, prot:30, focus:null,
+        items:['Flocons d\'avoine mixés — 50g','Œufs — 2','Skyr — 100g','Fraises — 100g','Miel — 1 càc'], tip:null },
+      { icon:'🩷', name:'Déjeuner', recipe:'Bowl chili', kcal:560, prot:38, focus:'fer+b9',
+        items:['🤍 Portion préparée mercredi soir','À emporter au travail','Réchauffe 2-3 min'],
+        tip:'🩷 Deuxième repas B9 de la semaine (au bœuf) — cuisiné mercredi soir' },
+      { icon:'💗', name:'Collation', recipe:'Part de gâteau au skyr', kcal:260, prot:10, focus:null,
+        items:['Gâteau au skyr nature — 2 parts'], tip:null },
+      { icon:'🖤', name:'Dîner', recipe:'Bowl chili', kcal:460, prot:30, focus:'fer+b9',
+        items:['🤍 L\'autre portion de mercredi soir','Réchauffe 5 min'], tip:null }
+    ]
+  },
+  5: { // Vendredi — bonus
+    label: 'Bonus · cardio & haut du corps 🎀',
+    kcal: 1850, prot: 113,
+    meals: [
+      { icon:'🌸', name:'Petit-déjeuner', recipe:'Porridge nature, œuf & fruit', kcal:520, prot:21, focus:null,
+        items:['Flocons d\'avoine — 65g','Lait — 150 ml','Œuf — 1 (cuit à côté)','Orange — 1','Miel — 1 càc'], tip:null },
+      { icon:'🩷', name:'Déjeuner', recipe:'Bowl poisson, riz & sauce tomate', kcal:560, prot:35, focus:null,
+        items:['🤍 Portion préparée mercredi soir','À emporter au travail','Réchauffe 2-3 min'],
+        tip:'💗 Cuisiné en même temps que le chili bœuf, mercredi soir' },
+      { icon:'💗', name:'Collation', recipe:'Skyr & fruit', kcal:210, prot:22, focus:null,
+        items:['Skyr — 250g','Clémentines — 2'], tip:null },
+      { icon:'🖤', name:'Dîner', recipe:'Bowl poisson, riz & sauce tomate', kcal:560, prot:35, focus:null,
+        items:['🤍 L\'autre portion de mercredi soir','Réchauffe 5 min'], tip:null }
+    ]
+  },
+  6: { // Samedi — fessiers volume + meal prep 14h
+    label: 'Fessiers volume 16h · meal prep 14h 🎀',
+    kcal: 1720, prot: 111,
+    meals: [
+      { icon:'🌸', name:'Petit-déjeuner', recipe:'Porridge nature, œuf & fruit', kcal:480, prot:21, focus:null,
+        items:['Flocons d\'avoine — 60g','Lait — 150 ml','Œuf — 1 (cuit à côté)','Orange — 1','Miel — 1 càc'],
+        tip:'💗 Reset à 9h, courses à 11h30 : un petit-déj qui tient la matinée' },
+      { icon:'🩷', name:'Déjeuner', recipe:'Repas simple : œufs, tartine & salade', kcal:450, prot:26, focus:null,
+        items:['Œufs — 3 (au plat ou brouillés)','Pain complet — 2 tranches','Salade tomate, concombre, poivron','Huile d\'olive — 1 càc, citron'],
+        tip:'💗 Rien à cuisiner de compliqué : la vraie cuisine, c\'est à 14h' },
+      { icon:'💗', name:'Collation', recipe:'Skyr & fruit', kcal:210, prot:22, focus:null,
+        items:['Skyr — 250g','Clémentines — 2'],
+        tip:'💗 À prendre vers 15h30, avant la salle à 16h' },
+      { icon:'🖤', name:'Dîner', recipe:'Bowl poulet citron-poivre & pommes de terre', kcal:580, prot:42, focus:null,
+        items:['Poulet — 180g','Pommes de terre — 250g rôties','Haricots verts — 150g','Citron, poivre, ail','Sauce skyr-citron-ail'],
+        tip:'🩷 GRANDE SESSION MEAL-PREP à 14h (1h30), après les courses : poulet citron-poivre ×4 (ce soir, dimanche midi et soir, mercredi midi), bœuf & purée ×2 (lundi), chili poulet ×2 (mardi), 6 œufs durs et le gâteau au skyr. Dans l\'ordre : poulet et pommes de terre au four · purée et œufs à l\'eau · bœuf puis chili à la poêle · gâteau au four pendant que tu ranges. Les boîtes de mardi et mercredi vont au congélateur.' }
+    ]
+  },
+  0: { // Dimanche — repos, zéro cuisine
+    label: 'Repos complet · zéro cuisine 🤍',
+    kcal: 1800, prot: 116,
+    meals: [
+      { icon:'🌸', name:'Petit-déjeuner', recipe:'Pancakes, fraises & skyr', kcal:540, prot:30, focus:null,
+        items:['Flocons d\'avoine mixés — 55g','Œufs — 2','Skyr — 100g','Fraises — 100g','Miel — 1 càc'], tip:null },
+      { icon:'🩷', name:'Déjeuner', recipe:'Bowl poulet citron-poivre & pommes de terre', kcal:580, prot:42, focus:null,
+        items:['🤍 Portion préparée samedi','Réchauffe 2-3 min','Sauce skyr fraîche'],
+        tip:'🩷 Tout est prêt depuis samedi : aujourd\'hui, tu ne cuisines pas.' },
+      { icon:'🌸', name:'Collation', recipe:'Œufs durs & tartine', kcal:250, prot:16, focus:null,
+        items:['Œufs — 2','Pain complet — 1 tranche'], tip:null },
+      { icon:'🖤', name:'Dîner', recipe:'Bowl poulet citron-poivre & pommes de terre', kcal:430, prot:28, focus:null,
+        items:['🤍 L\'autre portion de samedi','Réchauffe 5 min'], tip:null }
+    ]
+  }
+};
+
+const sport = [
+  { day: 1, name: 'Lundi', label: 'Fessiers lourd', icon: '🎀',
+    warmup: ['Tapis incliné — 5 min','Glute bridge — 2×15','Abducteur léger — 2×20'],
+    exercises: [
+      { name:'Hip Thrust', sets:'4×8', charge:'45–50 kg', rest:'2 min', tips:['Ton exercice n°1 — c\'est lui qui construit les fessiers','Pause 1 sec en haut, fesses serrées','Pousse avec les talons','Côtes rentrées, pas d\'hypercambrure'] },
+      { name:'Presse pieds hauts & larges', sets:'4×10', charge:'65–85 kg', rest:'90 sec', tips:['Pieds HAUTS sur la plateforme — cible les fessiers, pas les quadriceps','Descente contrôlée, ne verrouille pas les genoux','Position choisie exprès pour ta morpho : on développe les fessiers sans épaissir les cuisses'] },
+      { name:'RDL', sets:'3×10', charge:'20–30 kg', rest:'90 sec', tips:['Dos neutre — le point le plus important','Légère flexion des genoux','Sens l\'étirement derrière les cuisses'] },
+      { name:'Abducteur classique', sets:'3×20', charge:'55–60 kg', rest:'60 sec', tips:['Cible le moyen fessier — c\'est lui qui crée la courbe latérale','Mouvement lent, 2 sec','Volume monté à 20 reps exprès pour ta morpho'] },
+      { name:'Kickback Poulie', sets:'3×12/jambe', charge:'câble léger', rest:'60 sec', tips:['Jambe directement vers l\'arrière','Contraction en haut','Ne cambre pas le bas du dos'] }
+    ],
+    abdo: ['Vacuum — 3×20 sec → rentre le ventre, c\'est le muscle qui affine la taille'],
+    stretch: ['Pigeon stretch — 1 min chaque côté','Psoas — 45 sec chaque côté','Étirement ischios — 1 min']
+  },
+  { day: 3, name: 'Mercredi', label: 'Marche & souplesse', icon: '🩷', isRest: true,
+    restText: 'Pas de salle · souplesse 20 min à 20h15 · meal prep du soir dès novembre',
+    activities: ['🩷 Marche — vise 8 000 à 10 000 pas dans la journée','💗 Mobilité 10 min (voir l\'onglet Mobilité)','🌸 Vacuum — 3×20 sec, si tu y penses','🖤 Rien d\'autre : ton corps récupère de lundi et mardi']
+  },
+  { day: 2, name: 'Mardi', label: 'Haut du corps + fessiers légers', icon: '💖',
+    warmup: ['Rotations d\'épaules — 1 min','Face pull léger — 2×15','Tirage léger — 2×15'],
+    exercises: [
+      { name:'Élévations latérales', sets:'4×15', charge:'4–6 kg', rest:'60 sec', tips:['LE plus important pour ta morpho : ce muscle élargit visuellement les épaules et affine la taille','Charge légère, mouvement lent, coudes légèrement fléchis','Monte jusqu\'à l\'horizontale, pas plus haut','Descente contrôlée 2 sec'] },
+      { name:'Développé Épaules', sets:'4×10', charge:'6–8 kg', rest:'90 sec', tips:['Gaine le ventre','Ne cambre pas','Mouvement fluide, sans à-coups'] },
+      { name:'Tirage Vertical', sets:'4×10', charge:'30–40 kg', rest:'90 sec', tips:['Sors la poitrine','Tire avec le dos, pas avec les bras','Élargit le dos → taille visuellement plus fine'] },
+      { name:'Tirage Horizontal', sets:'3×12', charge:'25–35 kg', rest:'90 sec', tips:['Dos neutre','Épaules basses','Serre les omoplates en fin de mouvement'] },
+      { name:'Face Pull', sets:'3×15', charge:'15–25 kg', rest:'60 sec', tips:['Tire vers le visage, coudes hauts','Excellent pour la posture — et une posture droite affine toute la silhouette'] },
+      { name:'Curl Biceps', sets:'2×12', charge:'6–8 kg', rest:'60 sec', tips:['Coudes fixes','Pour les bras dans la robe 💖'] },
+      { name:'Abducteur (finisher fessiers)', sets:'3×20', charge:'45–55 kg', rest:'45 sec', tips:['15 min de fessiers légers en fin de séance','Ça doit brûler, pas épuiser — garde de la marge'] },
+      { name:'Kickback Poulie (finisher)', sets:'2×15/jambe', charge:'câble léger', rest:'45 sec', tips:['Jambe vers l\'arrière, contraction en haut','Léger : c\'est une dose en plus, pas une 2e séance'] }
+    ],
+    abdo: ['Vacuum — 3×20 sec','Dead bug — 3×10 → bas du dos collé au sol'],
+    stretch: ['Ouverture poitrine — 1 min','Étirement dos — 1 min','Child pose — 1 min']
+  },
+  { day: 4, name: 'Jeudi', label: 'Marche & mobilité', icon: '🩷', isRest: true,
+    restText: 'Pas de salle · marche · soir d\'église (pré-culte 19h30, culte 20h)',
+    activities: ['🩷 Marche — vise 8 000 à 10 000 pas','🌸 Souplesse 20 min à 19h (onglet Mobilité)','🌸 Vacuum — 3×20 sec, si tu y penses','🖤 Repos : demain, séance bonus si tu as l\'énergie']
+  },
+  { day: 5, name: 'Vendredi', label: 'Bonus · cardio & haut du corps léger', icon: '🎀',
+    warmup: ['Marche inclinée — 5 min','Rotations d\'épaules — 1 min'],
+    exercises: [
+      { name:'Tapis incliné', sets:'20–25 min', charge:'4–6 km/h · inclinaison 6–10 %', rest:'—', tips:['Tu dois pouvoir parler sans être essoufflée','Fatiguée ? Raccourcis sans culpabiliser'] },
+      { name:'Tirage Horizontal', sets:'3×12', charge:'25–35 kg', rest:'90 sec', tips:['Dos neutre','Serre les omoplates en fin de mouvement'] },
+      { name:'Élévations latérales', sets:'3×15', charge:'4–6 kg', rest:'60 sec', tips:['Deuxième dose de la semaine — c\'est ce muscle qui change ta silhouette','Charge légère, mouvement lent'] },
+      { name:'Face Pull', sets:'3×15', charge:'15–25 kg', rest:'60 sec', tips:['Coudes hauts, tire vers le visage','Pour la posture'] }
+    ],
+    abdo: ['Vacuum — 3×20 sec','Dead bug — 3×10'],
+    stretch: ['Ouverture poitrine — 1 min','Pigeon stretch — 1 min chaque côté','Papillon — 1 min','🖤 Pas de fessiers aujourd\'hui : ils doivent être frais demain']
+  },
+  { day: 6, name: 'Samedi', label: 'Fessiers volume', icon: '🎀',
+    warmup: ['Marche inclinée — 5 min','Glute bridge — 2×15','Abducteur léger — 2×20'],
+    exercises: [
+      { name:'Hip Thrust', sets:'3×12', charge:'35–45 kg', rest:'90 sec', tips:['Séance volume : un peu moins lourd que lundi, plus de reps','Pause 1 sec en haut, fesses serrées'] },
+      { name:'Bulgarian Split Squat', sets:'3×10/jambe', charge:'6–8 kg', rest:'90 sec', tips:['Buste penché en avant — c\'est ce qui cible le fessier','Pousse avec le talon avant','Descends lentement'] },
+      { name:'Montées sur banc haut', sets:'3×10/jambe', charge:'poids du corps → 4–6 kg', rest:'90 sec', tips:['Banc à hauteur de genou','Pousse avec le talon, buste légèrement penché','Redescends lentement — c\'est l\'exercice qui te redonne de la force pour les escaliers'] },
+      { name:'Abducteur penché avant', sets:'3×15', charge:'40–50 kg', rest:'60 sec', tips:['Buste penché en avant','Cible le haut des fesses — la zone qui crée la courbe'] }
+    ],
+    abdo: ['Vacuum — 3×20 sec','Dead bug — 3×10','Planche — 3×30 sec','Hollow hold — 3×20 sec','🤍 Pas de russian twist ni de flexions latérales lestées : ça épaissit la taille'],
+    stretch: ['🌸 Massage 5 min (ventre ou dos — onglet Mobilité)','Pigeon stretch — 1 min chaque côté','90/90','Étirement ischios — 1 min']
+  },
+  { day: 0, name: 'Dimanche', label: 'Repos complet', icon: '🤍', isRest: true,
+    restText: 'Vrai jour off — aucune séance. C\'est ici que ton corps construit ce que tu as travaillé.',
+    activities: ['✕ Pas de musculation, pas de cardio, pas d\'abdos','🩷 Marche tranquille si tu en as envie — rien d\'imposé','🌸 Étirements doux 10 min, seulement si ça te fait du bien','💗 Ou juste de la danse libre pour le plaisir','🖤 Couche-toi tôt : le sommeil du dimanche prépare toute ta semaine']
+  }
+];
+
+// ══════════════════════════════════════════════════════
+// STATE
+// ══════════════════════════════════════════════════════
+
+// Historique importé depuis tes anciennes captures d'écran (pré-chargé si ton navigateur n'a pas déjà tes perfs)
+const DEFAULT_PERFORMANCES = [
+  { id: 1001, exercise: 'Sumo Squat', mode: 'equal', weight: 28, reps: 8, sets: 4, notes: '', date: '31 août 2026' },
+  { id: 1002, exercise: 'Hip Thrust', mode: 'progressive', series: [{weight:15,reps:8},{weight:25,reps:8},{weight:35,reps:8},{weight:35,reps:8}], notes: 'S3 - 8-8-3 Dernière série 8-8', date: '31 août 2026' },
+  { id: 1003, exercise: 'Abducteur', mode: 'progressive', series: [{weight:50,reps:10},{weight:55,reps:10},{weight:60,reps:8}], notes: '3 positions', date: '31 août 2026' },
+  { id: 1004, exercise: 'Presse', mode: 'progressive', series: [{weight:69,reps:12},{weight:77,reps:12},{weight:85,reps:12}], notes: '', date: '31 août 2026' },
+  { id: 1005, exercise: 'Développé Épaules', mode: 'progressive', series: [{weight:8,reps:10},{weight:12,reps:6},{weight:8,reps:10}], notes: 'La deuxième série j\'ai terminé par 4 rep à 8kg', date: '12 août 2026' },
+  { id: 1006, exercise: 'Face Pull', mode: 'progressive', series: [{weight:35,reps:12},{weight:40,reps:10},{weight:40,reps:10}], notes: '', date: '12 août 2026' },
+  { id: 1007, exercise: 'Tirage Vertical', mode: 'progressive', series: [{weight:25,reps:12},{weight:30,reps:10},{weight:35,reps:8},{weight:40,reps:5}], notes: 'La 5eme rep de la dernière était tellement dur!!', date: '12 août 2026' },
+  { id: 1008, exercise: 'Tirage Horizontal', mode: 'progressive', series: [{weight:25,reps:12},{weight:30,reps:10},{weight:35,reps:8},{weight:40,reps:6}], notes: 'Dernière série trop lourde', date: '12 août 2026' },
+  { id: 1009, exercise: 'Curl Biceps', mode: 'progressive', series: [{weight:15,reps:12},{weight:20,reps:10},{weight:25,reps:8}], notes: '', date: '12 août 2026' },
+  { id: 1010, exercise: 'Leg Extension', mode: 'progressive', series: [{weight:30,reps:10},{weight:30,reps:10},{weight:35,reps:10}], notes: '', date: '28 juil. 2026' },
+  { id: 1011, exercise: 'Sumo Squat', mode: 'equal', weight: 28, reps: 9, sets: 4, notes: '', date: '28 juil. 2026' },
+  { id: 1012, exercise: 'Hip Thrust', mode: 'progressive', series: [{weight:20,reps:8},{weight:30,reps:8},{weight:40,reps:8},{weight:40,reps:8}], notes: '20 : 8-8-8 | 30 : 8-8-6 | 40 8-8', date: '28 juil. 2026' },
+  { id: 1013, exercise: 'Abducteur', mode: 'equal', weight: 50, reps: 10, sets: 4, notes: '', date: '28 juil. 2026' },
+  { id: 1014, exercise: 'Presse', mode: 'progressive', series: [{weight:77,reps:10},{weight:85,reps:10},{weight:93,reps:10}], notes: '', date: '28 juil. 2026' },
+  { id: 1015, exercise: 'Presse', mode: 'progressive', series: [{weight:77,reps:12},{weight:85,reps:10},{weight:85,reps:10}], notes: '', date: '24 juil. 2026' },
+  { id: 1016, exercise: 'Tirage Vertical', mode: 'progressive', series: [{weight:20,reps:10},{weight:25,reps:10},{weight:30,reps:8},{weight:35,reps:6}], notes: 'Première série trop facile, deuxième série mal au biceps', date: '23 juil. 2026' },
+  { id: 1017, exercise: 'Tirage Horizontal', mode: 'progressive', series: [{weight:20,reps:12},{weight:25,reps:10},{weight:30,reps:9},{weight:35,reps:6}], notes: 'Premiere série easy, dernière série très dur', date: '23 juil. 2026' }
+];
+
+let selectedNutritionDay = new Date().getDay();
+let performances = JSON.parse(localStorage.getItem('performances') || JSON.stringify(DEFAULT_PERFORMANCES));
+
+// ══════════════════════════════════════════════════════
+// INIT
+// ══════════════════════════════════════════════════════
+
+document.addEventListener('DOMContentLoaded', () => {
+  setHeaderDate();
+  renderHero();
+  renderPhase();
+  renderTodayBanner();
+  renderNutritionDays();
+  renderNutritionContent(selectedNutritionDay);
+  renderSport();
+  renderPerf();
+  renderRecettes();
+  renderCourses();
+  renderMobiliteCorps();
+  renderMens();
+  renderTodaySession();
+  showGroup('sport');
+});
+
+function setHeaderDate() {
+  const now = new Date();
+  const options = { weekday:'long', day:'numeric', month:'long' };
+  const dateStr = now.toLocaleDateString('fr-FR', options);
+  document.getElementById('header-date').textContent = dateStr.charAt(0).toUpperCase() + dateStr.slice(1);
+}
+
+// ══════════════════════════════════════════════════════
+// THEME
+// ══════════════════════════════════════════════════════
+
+function toggleRegles() {
+  const body = document.getElementById('regles-body');
+  const toggle = document.getElementById('regles-toggle');
+  body.classList.toggle('open');
+  toggle.style.transform = body.classList.contains('open') ? 'rotate(180deg)' : '';
+}
+
+function togglePrep() {
+  const body = document.getElementById('prep-body');
+  const toggle = document.getElementById('prep-toggle');
+  body.classList.toggle('open');
+  toggle.style.transform = body.classList.contains('open') ? 'rotate(180deg)' : '';
+}
+
+function toggleMobilite() {
+  const body = document.getElementById('mobilite-body');
+  const toggle = document.getElementById('mobilite-toggle');
+  body.classList.toggle('open');
+  toggle.style.transform = body.classList.contains('open') ? 'rotate(180deg)' : '';
+}
+
+// ── TIMER ──
+let timerInterval = null;
+let timerSeconds = 0;
+let timerRunning = false;
+let timerTotal = 0;
+
+function parseRestSeconds(restStr) {
+  if (restStr.includes('2 min')) return 120;
+  if (restStr.includes('90 sec')) return 90;
+  if (restStr.includes('75 sec')) return 75;
+  if (restStr.includes('60 sec')) return 60;
+  return 90;
+}
+
+function openTimer(exerciseName, seconds) {
+  timerSeconds = seconds;
+  timerTotal = seconds;
+  timerRunning = false;
+  clearInterval(timerInterval);
+  document.getElementById('timer-exercise-name').textContent = exerciseName;
+  document.getElementById('timer-display').textContent = seconds;
+  document.getElementById('timer-btn').textContent = '▶ Démarrer';
+  document.getElementById('timer-overlay').classList.add('open');
+}
+
+function closeTimer() {
+  clearInterval(timerInterval);
+  timerRunning = false;
+  document.getElementById('timer-overlay').classList.remove('open');
+}
+
+function toggleTimer() {
+  if (timerRunning) {
+    clearInterval(timerInterval);
+    timerRunning = false;
+    document.getElementById('timer-btn').textContent = '▶ Reprendre';
+  } else {
+    timerRunning = true;
+    document.getElementById('timer-btn').textContent = '⏸ Pause';
+    timerInterval = setInterval(() => {
+      timerSeconds--;
+      document.getElementById('timer-display').textContent = timerSeconds;
+      if (timerSeconds <= 0) {
+        clearInterval(timerInterval);
+        timerRunning = false;
+        document.getElementById('timer-btn').textContent = '✓ Terminé !';
+        document.getElementById('timer-display').textContent = '0';
+        // Vibration si supportée
+        if (navigator.vibrate) navigator.vibrate([200, 100, 200]);
+      }
+    }, 1000);
+  }
+}
+
+// ══════════════════════════════════════════════════════
+// CORPS & MOBILITÉ
+// ══════════════════════════════════════════════════════
+
+const mobiliteCorps = [
+  { id:'ventre', icon:'🌸', titre:'Massage Ventre', duree:'5 min',
+    materiel:'Rouleau en bois + huile · Allongée, jambes fléchies, ventre détendu',
+    color:'var(--rose)', colorLight:'var(--rose-light)',
+    etapes:[
+      { nom:'Cercles autour du nombril', duree:'1 min', desc:'Dans le sens des aiguilles d\'une montre. Pression très légère.' },
+      { nom:'Remontées bas ventre', duree:'1 min', desc:'Du bas du ventre vers le nombril, mouvements lents ascendants.' },
+      { nom:'Expansion latérale', duree:'1 min', desc:'Du nombril vers les côtés, en direction des hanches.' },
+      { nom:'Drainage vers les aines', duree:'1 min', desc:'Du bas ventre vers les plis des aines. Très doux — zone des ganglions lymphatiques.' },
+      { nom:'Cercles de clôture', duree:'1 min', desc:'Grands cercles doux pour terminer et harmoniser.' }
+    ],
+    warning:'🤍 Toujours dans le sens des aiguilles d\'une montre · Pression légère · Respire profondément'
+  },
+  { id:'dos', icon:'🌸', titre:'Massage Dos', duree:'5 min',
+    materiel:'Rouleau en bois + huile · Debout ou à genoux selon la zone',
+    color:'var(--gold)', colorLight:'var(--gold-light)',
+    etapes:[
+      { nom:'Bas du dos', duree:'1 min', desc:'Rouleau horizontalement de chaque côté de la colonne. Petits mouvements lents.' },
+      { nom:'Remontées colonne', duree:'1 min', desc:'Du bas vers le haut, toujours vers le cœur. Longs passages fluides.' },
+      { nom:'Haut du dos / omoplates', duree:'1 min', desc:'Entre les omoplates. Mouvement circulaire, insiste si tension.' },
+      { nom:'Hanches & sacrum', duree:'1 min', desc:'Le tout bas du dos. Petits cercles appuyés.' },
+      { nom:'Effleurages finaux', duree:'1 min', desc:'Longs passages du bas vers le haut pour drainer et terminer.' }
+    ]
+  },
+  { id:'mobilite', icon:'💗', titre:'Mobilité Active', duree:'10 min',
+    materiel:'Mouvements dynamiques — ne pas tenir les positions, bouger lentement',
+    color:'var(--blue)', colorLight:'var(--blue-light)',
+    sections:[
+      { nom:'Hanches — 5 min', etapes:[
+        { nom:'Cercles de hanches debout', duree:'1 min', desc:'Pieds écartés largeur épaules, mains sur les hanches. Grands cercles lents dans les 2 sens.' },
+        { nom:'Rotations en 8', duree:'1 min', desc:'Même position. Dessine un 8 horizontal avec tes hanches. Fluide et continu.' },
+        { nom:'Fente basse + rotation du buste', duree:'1 min 30', desc:'En fente basse, genou arrière au sol. Tourne le buste vers le genou avant, bras ouverts. 45 sec × 2 côtés.' }
+      ]},
+      { nom:'Dos — 5 min', etapes:[
+        { nom:'Ondulations vertébrales', duree:'1 min', desc:'Debout, pieds écartés. Commence par plier les genoux, arrondis le bas du dos, puis remonte vertèbre par vertèbre jusqu\'à la nuque.' },
+        { nom:'Chat/vache dynamique', duree:'1 min', desc:'À quatre pattes. En soufflant : arrondis le dos, menton vers la poitrine. En inspirant : creuse le dos, regard plafond.' },
+        { nom:'Pont montée/descente', duree:'1 min', desc:'Allongée sur le dos, pieds à plat. Monte le bassin lentement vertèbre par vertèbre, tiens 2 sec, redescends pareil.' },
+        { nom:'Torsions du buste assis', duree:'1 min', desc:'Assise jambes croisées. Pose la main droite sur le genou gauche, regarde derrière. Alterne les 2 côtés.' }
+      ]}
+    ]
+  },
+  { id:'etirements', icon:'🌸', titre:'Étirements Tenus', duree:'10 min',
+    materiel:'Tenir chaque position minimum 45 sec · Respirer profondément · Ne jamais forcer',
+    color:'var(--green)', colorLight:'var(--green-light)',
+    etapes:[
+      { nom:'Pigeon au sol', duree:'1 min × 2 côtés', desc:'À quatre pattes, ramène le genou droit derrière le poignet droit, étends la jambe gauche derrière. Penche-toi en avant, front vers le sol. Très efficace pour les hanches.' },
+      { nom:'Fente basse profonde', duree:'45 sec × 2 côtés', desc:'Un genou au sol, l\'autre pied devant. Pousse le bassin vers le bas et l\'avant. Bras vers le ciel pour intensifier.' },
+      { nom:'Cobra', duree:'1 min', desc:'Allongée sur le ventre, mains sous les épaules. Pousse sur les mains, soulève le buste. Regarde vers le plafond. Hanches au sol.' },
+      { nom:'Papillon assis', duree:'1 min', desc:'Assise, plantes des pieds l\'une contre l\'autre. Dos droit. Laisse les genoux descendre par leur propre poids.' },
+      { nom:'Torsion allongée', duree:'45 sec × 2 côtés', desc:'Sur le dos, ramène le genou droit vers la gauche, bras droit tendu. Regarde vers la droite. Doux pour le bas du dos.' }
+    ]
+  }
+];
+
+function renderMobiliteCorps() {
+  const container = document.getElementById('mobilite-corps-content');
+  container.innerHTML = mobiliteCorps.map(bloc => {
+    const hasSection = bloc.sections;
+    let etapesHTML = '';
+
+    if (hasSection) {
+      etapesHTML = bloc.sections.map(s => `
+        <div style="margin-bottom:10px;">
+          <div style="font-size:11px;font-weight:600;letter-spacing:1px;text-transform:uppercase;color:${bloc.color};margin-bottom:8px;">${s.nom}</div>
+          ${s.etapes.map((e, i) => `
+            <div style="display:flex;gap:10px;margin-bottom:8px;">
+              <div style="background:${bloc.color};color:white;min-width:20px;height:20px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;flex-shrink:0;margin-top:2px;">${i+1}</div>
+              <div>
+                <div style="font-size:13px;font-weight:500;color:var(--text);">${e.nom} <span style="font-size:11px;font-weight:400;color:${bloc.color};">· ${e.duree}</span></div>
+                <div style="font-size:12px;color:var(--muted);margin-top:2px;line-height:1.5;">${e.desc}</div>
+              </div>
+            </div>`).join('')}
+        </div>`).join('');
+    } else {
+      etapesHTML = (bloc.etapes || []).map((e, i) => `
+        <div style="display:flex;gap:10px;margin-bottom:10px;">
+          <div style="background:${bloc.color};color:white;min-width:20px;height:20px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;flex-shrink:0;margin-top:2px;">${i+1}</div>
+          <div>
+            <div style="font-size:13px;font-weight:500;color:var(--text);">${e.nom} <span style="font-size:11px;font-weight:400;color:${bloc.color};">· ${e.duree}</span></div>
+            <div style="font-size:12px;color:var(--muted);margin-top:2px;line-height:1.5;">${e.desc}</div>
+          </div>
+        </div>`).join('');
+    }
+
+    return `
+      <div style="background:var(--card);border:1px solid var(--border);border-radius:16px;margin-bottom:12px;overflow:hidden;">
+        <div style="display:flex;align-items:center;gap:12px;padding:14px 16px 10px;cursor:pointer;" onclick="toggleMobiliteCorps('${bloc.id}')">
+          <span style="font-size:24px;">${bloc.icon}</span>
+          <div style="flex:1;">
+            <div style="font-family:'Cormorant Garamond',serif;font-size:18px;font-weight:600;color:var(--text);">${bloc.titre}</div>
+            <div style="font-size:11px;color:var(--muted);margin-top:1px;">${bloc.duree}</div>
+          </div>
+          <span style="background:${bloc.colorLight};color:${bloc.color};font-size:11px;font-weight:600;padding:4px 10px;border-radius:999px;">${bloc.duree}</span>
+          <span id="mctoggle_${bloc.id}" style="color:var(--muted);transition:transform 0.2s;">▼</span>
+        </div>
+        <div id="mcbody_${bloc.id}" style="display:none;padding:0 16px 14px;">
+          <div style="height:1px;background:var(--border);margin-bottom:12px;"></div>
+          <div style="font-size:12px;color:${bloc.color};background:${bloc.colorLight};border-radius:8px;padding:8px 12px;margin-bottom:12px;">
+            🖤 ${bloc.materiel}
+          </div>
+          ${etapesHTML}
+          ${bloc.warning ? `<div style="background:rgba(142,42,80,0.1);border-radius:8px;padding:8px 12px;font-size:12px;color:var(--gold);margin-top:6px;">${bloc.warning}</div>` : ''}
+        </div>
+      </div>`;
+  }).join('');
+}
+
+function toggleMobiliteCorps(id) {
+  const body = document.getElementById('mcbody_' + id);
+  const toggle = document.getElementById('mctoggle_' + id);
+  const isOpen = body.style.display === 'block';
+  body.style.display = isOpen ? 'none' : 'block';
+  toggle.style.transform = isOpen ? '' : 'rotate(180deg)';
+}
+
+// ══════════════════════════════════════════════════════
+// MENSURATIONS
+// ══════════════════════════════════════════════════════
+
+let mensurations = JSON.parse(localStorage.getItem('mensurations') || '[]');
+
+function toggleMensForm() {
+  document.getElementById('mens-form').classList.toggle('open');
+}
+
+function saveMens() {
+  const entry = {
+    id: Date.now(),
+    date: new Date().toLocaleDateString('fr-FR', { day:'numeric', month:'long', year:'numeric' }),
+    poids: parseFloat(document.getElementById('mens-poids').value) || null,
+    taille: parseFloat(document.getElementById('mens-taille').value) || null,
+    hanches: parseFloat(document.getElementById('mens-hanches').value) || null,
+    cuisses: parseFloat(document.getElementById('mens-cuisses').value) || null,
+    bras: parseFloat(document.getElementById('mens-bras').value) || null,
+    grasse: parseFloat(document.getElementById('mens-grasse').value) || null,
+    notes: document.getElementById('mens-notes').value
+  };
+
+  if (!entry.poids && !entry.taille && !entry.hanches) {
+    alert('Remplis au moins une mesure !');
+    return;
+  }
+
+  mensurations.unshift(entry);
+  localStorage.setItem('mensurations', JSON.stringify(mensurations));
+
+  // Reset
+  ['poids','taille','hanches','cuisses','bras','grasse','notes'].forEach(id => {
+    document.getElementById('mens-' + id).value = '';
+  });
+  document.getElementById('mens-form').classList.remove('open');
+  renderMens();
+}
+
+function deleteMens(id) {
+  mensurations = mensurations.filter(m => m.id !== id);
+  localStorage.setItem('mensurations', JSON.stringify(mensurations));
+  renderMens();
+}
+
+function renderMens() {
+  const container = document.getElementById('mens-content');
+
+  if (mensurations.length === 0) {
+    container.innerHTML = `
+      <div class="empty-perf">
+        <div class="empty-icon">🩷</div>
+        <p>Aucune mensuration enregistrée.<br>Commence dès aujourd'hui pour suivre ta progression ! 🌸</p>
+      </div>`;
+    return;
+  }
+
+  // Évolution entre première et dernière mesure
+  const last = mensurations[0];
+  const first = mensurations[mensurations.length - 1];
+
+  let evolutionHTML = '';
+  if (mensurations.length > 1) {
+    const metrics = [
+      { key:'poids', label:'Poids', unit:'kg', better:'down' },
+      { key:'taille', label:'Taille', unit:'cm', better:'down' },
+      { key:'hanches', label:'Hanches', unit:'cm', better:'neutral' },
+      { key:'cuisses', label:'Cuisses', unit:'cm', better:'neutral' },
+      { key:'grasse', label:'% Gras', unit:'%', better:'down' }
+    ];
+
+    evolutionHTML = `
+      <div style="background:var(--card);border:1px solid var(--border);border-radius:16px;margin:16px;padding:16px;">
+        <div style="font-family:'Cormorant Garamond',serif;font-size:18px;font-style:italic;color:var(--rose);margin-bottom:12px;">🖤 Évolution globale</div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;">
+          ${metrics.map(m => {
+            if (!last[m.key] || !first[m.key]) return '';
+            const diff = (last[m.key] - first[m.key]).toFixed(1);
+            const isPositive = parseFloat(diff) > 0;
+            const color = m.better === 'down'
+              ? (isPositive ? 'var(--rose)' : 'var(--green)')
+              : 'var(--text)';
+            const sign = isPositive ? '+' : '';
+            return `
+              <div style="background:var(--card2);border-radius:10px;padding:10px;text-align:center;">
+                <div style="font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:1px;margin-bottom:4px;">${m.label}</div>
+                <div style="font-size:20px;font-weight:700;color:${color};">${sign}${diff}${m.unit}</div>
+                <div style="font-size:11px;color:var(--muted);">${first[m.key]} → ${last[m.key]}</div>
+              </div>`;
+          }).join('')}
+        </div>
+      </div>`;
+  }
+
+  const entriesHTML = mensurations.map(e => `
+    <div style="background:var(--card);border:1px solid var(--border);border-radius:14px;margin:0 16px 10px;padding:16px;">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;">
+        <div style="font-family:'Cormorant Garamond',serif;font-size:16px;font-style:italic;color:var(--rose);">${e.date}</div>
+        <span onclick="deleteMens(${e.id})" style="color:var(--muted);cursor:pointer;font-size:18px;">✕</span>
+      </div>
+      <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px;">
+        ${e.poids ? `<div style="background:var(--card2);border-radius:8px;padding:8px;text-align:center;"><div style="font-size:10px;color:var(--muted);margin-bottom:2px;">POIDS</div><div style="font-size:16px;font-weight:700;color:var(--text);">${e.poids}kg</div></div>` : ''}
+        ${e.taille ? `<div style="background:var(--card2);border-radius:8px;padding:8px;text-align:center;"><div style="font-size:10px;color:var(--muted);margin-bottom:2px;">TAILLE</div><div style="font-size:16px;font-weight:700;color:var(--text);">${e.taille}cm</div></div>` : ''}
+        ${e.hanches ? `<div style="background:var(--card2);border-radius:8px;padding:8px;text-align:center;"><div style="font-size:10px;color:var(--muted);margin-bottom:2px;">HANCHES</div><div style="font-size:16px;font-weight:700;color:var(--text);">${e.hanches}cm</div></div>` : ''}
+        ${e.cuisses ? `<div style="background:var(--card2);border-radius:8px;padding:8px;text-align:center;"><div style="font-size:10px;color:var(--muted);margin-bottom:2px;">CUISSES</div><div style="font-size:16px;font-weight:700;color:var(--text);">${e.cuisses}cm</div></div>` : ''}
+        ${e.bras ? `<div style="background:var(--card2);border-radius:8px;padding:8px;text-align:center;"><div style="font-size:10px;color:var(--muted);margin-bottom:2px;">BRAS</div><div style="font-size:16px;font-weight:700;color:var(--text);">${e.bras}cm</div></div>` : ''}
+        ${e.grasse ? `<div style="background:var(--card2);border-radius:8px;padding:8px;text-align:center;"><div style="font-size:10px;color:var(--muted);margin-bottom:2px;">% GRAS</div><div style="font-size:16px;font-weight:700;color:var(--text);">${e.grasse}%</div></div>` : ''}
+      </div>
+      ${e.notes ? `<div style="font-size:12px;color:var(--muted);margin-top:8px;font-style:italic;">"${e.notes}"</div>` : ''}
+    </div>`).join('');
+
+  container.innerHTML = evolutionHTML + entriesHTML;
+}
+
+function toggleTheme() {} // désactivé
+
+// ══════════════════════════════════════════════════════
+// RECETTES DATA & RENDER
+// ══════════════════════════════════════════════════════
+
+const recettes = {
+  '💖 Les 4 finitions qui changent tout': [
+    { icon:'🩷', name:'Sauce skyr-citron-ail', kcal:60, prot:9,
+      ingredients:['Skyr — 100g','Citron — ½','Ail — 1 gousse écrasée','Sel, poivre','Herbes fraîches ou ciboulette (option)'],
+      steps:['Mélange tout dans un bol','Ajoute une cuillère d\'eau si tu la veux plus liquide'],
+      tip:'💗 30 secondes, 60 calories, 9g de protéines. C\'est elle qui transforme une assiette triste en bowl. Variante : remplace le citron par 1 càc de moutarde et ½ càc de miel.' },
+    { icon:'🩷', name:'La petite salade fraîche à côté', kcal:40, prot:2,
+      ingredients:['Tomate — 1','Concombre — ¼','Oignon rouge — un peu (option)','Citron ou vinaigre','Sel, poivre'],
+      steps:['Coupe tout en petits dés','Assaisonne au citron'],
+      tip:'🩷 Deux minutes. Ça apporte de la fraîcheur, du volume — et sa vitamine C fait absorber le fer du plat.' },
+    { icon:'🩷', name:'Le topping croustillant', kcal:50, prot:1,
+      ingredients:['Oignons frits en sachet — 1 càs','Ou graines de sésame, ou persil frais'],
+      steps:['Saupoudre sur le bowl juste avant de manger'],
+      tip:'💗 Le détail qui fait "restaurant". Un sachet dure des semaines et coûte deux euros.' },
+    { icon:'💗', name:'L\'avocat', kcal:120, prot:2,
+      ingredients:['Avocat — ½'],
+      steps:['Coupe en cubes ou en tranches sur le bowl'],
+      tip:'🌷 Riche en B9 — exactement ce dont tu manques. Et il rend n\'importe quel plat plus crémeux.' }
+  ],
+  'Petit-déjeuner': [
+    { icon:'🌸', name:'Pancakes, fraises & skyr', kcal:520, prot:30,
+      ingredients:['Flocons d\'avoine mixés en farine — 50g','Œufs — 2','Skyr — 100g (dans la pâte)','Fraises — 100g','Levure — ½ càc','Miel — 1 càc','Skyr — un peu en topping'],
+      steps:['Mixe les flocons en farine','Mélange œufs, skyr et farine, ajoute la levure','Cuis 2 min de chaque côté à feu moyen','Garnis de skyr, de fraises coupées et d\'un filet de miel'],
+      tip:'💗 Prépare la pâte la veille · les fraises surgelées marchent très bien et coûtent moins cher' },
+    { icon:'🩷', name:'Œufs brouillés, avocat & tartine', kcal:520, prot:26,
+      ingredients:['Œufs — 3','Poivron — ¼ coupé fin','Tomate — ½ coupée en dés','Avocat — ½','Pain complet — 1 tranche','Sel, poivre'],
+      steps:['Fais revenir le poivron et la tomate 3 min','Verse les œufs battus, remue doucement à feu doux pour qu\'ils restent crémeux','Sers avec l\'avocat coupé et la tartine'],
+      tip:'🌷 L\'avocat apporte de la B9, le poivron la vitamine C. Petit-déjeuner salé, rassasiant, prêt en 8 minutes.' },
+    { icon:'🌸', name:'Porridge nature, œuf & fruit', kcal:480, prot:21,
+      ingredients:['Flocons d\'avoine — 60g','Lait — 150 ml','Œuf — 1','Orange — 1','Miel — 1 càc'],
+      steps:['Fais chauffer les flocons avec le lait 5 min en remuant','Cuis l\'œuf à côté comme tu préfères','Sers le porridge avec le miel, l\'œuf à côté, le fruit à part'],
+      tip:'💗 Rien de mélangé — chaque chose dans son coin' }
+  ],
+  'Les bowls': [
+    { icon:'🩷', name:'Bowl bœuf & purée', kcal:620, prot:40,
+      ingredients:['Viande hachée 5% — 140g','Pommes de terre — 250g','Lait + 1 càs de crème légère','Haricots verts 200g — ou poêlée courgettes, carottes & petits pois','Ail, sel, poivre, ciboulette'],
+      steps:['Cuis les pommes de terre à l\'eau, écrase-les avec le lait et la crème','Fais les haricots verts vapeur, 6-8 min','Fais dorer la viande hachée en gros morceaux à feu vif — laisse-la bien colorer, ne l\'écrase pas','Sors la viande, déglace la poêle avec un fond d\'eau et un peu de poivre : c\'est ta sauce','Dresse en bowl : purée, viande, haricots verts, sauce par-dessus, ciboulette'],
+      tip:'🩷 Ton meilleur repas fer de la semaine. Le secret du visuel : bien dorer la viande et ne pas l\'émietter.' },
+    { icon:'🩷', name:'Bowl chili', kcal:580, prot:40,
+      ingredients:['Poulet 150g OU viande hachée 5% 120g','Haricots rouges façon chili — 1 boîte','Riz — 50g cru','Poivron — ½','Tomate + concombre pour la salade','Oignons frits — 1 càs','Citron'],
+      steps:['Lance le riz','Fais dorer le poulet en morceaux (ou la viande hachée) avec le poivron','Verse la boîte de haricots rouges, réchauffe 5 min','Coupe la salade tomate-concombre, assaisonne au citron','Dresse en bowl : riz d\'un côté, chili de l\'autre, salade à côté, oignons frits par-dessus'],
+      tip:'🩷 Ton repas B9 de la semaine, deux fois : au poulet le mardi, au bœuf le jeudi. Les oignons frits et la salade fraîche font tout le visuel.' },
+    { icon:'🩷', name:'Bowl poulet citron-poivre & pommes de terre', kcal:580, prot:42,
+      ingredients:['Poulet — 170 à 180g en morceaux','Pommes de terre — 250g','Haricots verts — 150g','Citron — 1','Ail, paprika, poivre, herbes','Sauce skyr-citron-ail'],
+      steps:['Coupe le poulet en morceaux, assaisonne avec ail, paprika, poivre, jus de citron','Air fryer 180°C : 15 min le poulet, 20 min les pommes de terre en cubes','Haricots verts vapeur 6-8 min','Dresse en bowl et ajoute la sauce skyr'],
+      tip:'💗 Le samedi à 14h, fais 4 portions d\'un coup — samedi soir, dimanche midi et soir, mercredi midi' },
+    { icon:'🩷', name:'Bowl poulet grillé, riz & poêlée de légumes', kcal:570, prot:40,
+      ingredients:['Poulet — 160 à 200g : aiguillettes, pilons ou cuisses','Riz — 65g cru','Poêlée courgettes, poivrons & carottes — 200g','Huile — 1 càc','Sauce skyr-citron-ail','Paprika, ail'],
+      steps:['Lance le riz','Fais sauter les légumes 6-8 min à feu vif, ils doivent rester croquants','Cuis les aiguillettes 3 min de chaque côté à la poêle bien chaude — ou les pilons 25 min au four/air fryer','Dresse en bowl : riz, légumes, poulet, sauce par-dessus'],
+      tip:'💗 Les aiguillettes cuisent en 6 minutes. Les pilons coûtent environ deux fois moins cher au kilo — bonne option quand le budget serre.' },
+    { icon:'🩷', name:'Bowl poisson, riz & sauce tomate', kcal:560, prot:35,
+      ingredients:['Poisson blanc ou saumon — 150g','Riz — 70g cru','Tomates concassées — 150g','Poivron — ½','Oignon — ½','Salade verte','Citron, ail'],
+      steps:['Lance le riz','Fais revenir oignon, poivron et ail, ajoute les tomates concassées, laisse mijoter 10 min','Poêle ou passe le poisson au four 8-10 min (directement s\'il est surgelé)','Dresse en bowl : riz, poisson, sauce tomate par-dessus, salade verte à côté, citron'],
+      tip:'💗 Fais la sauce tomate en double le samedi, elle se garde 3 jours' }
+  ],
+  'Collations & sucré': [
+    { icon:'💗', name:'Skyr & fruit', kcal:210, prot:22,
+      ingredients:['Skyr — 250g','Clémentines — 2, ou 1 nectarine, ou 1 pêche plate'],
+      steps:['Coupe le fruit sur le skyr'],
+      tip:'💗 À distance des repas riches en fer : le calcium en freine l\'absorption' },
+    { icon:'💗', name:'Gâteau au skyr nature', kcal:130, prot:5,
+      ingredients:['Skyr — 250g','Œufs — 2','Farine — 120g','Sucre — 60g','Levure — 1 sachet','Vanille — 1 càc'],
+      steps:['Mélange skyr, œufs, sucre et vanille','Ajoute farine et levure','Verse dans un moule, four 180°C pendant 30 min','Laisse refroidir et coupe en 8 parts'],
+      tip:'💗 Une part = 130 kcal. Fait le samedi, il dure toute la semaine.' },
+    { icon:'💗', name:'Part de gâteau au skyr', kcal:260, prot:10,
+      ingredients:['Gâteau au skyr nature — 2 parts'],
+      steps:['Coupe deux parts du gâteau préparé le samedi'],
+      tip:null },
+    { icon:'🌸', name:'Œufs durs & tartine', kcal:250, prot:16,
+      ingredients:['Œufs — 2','Pain complet — 1 tranche'],
+      steps:['Cuis les œufs 9 min à l\'eau bouillante','Laisse refroidir, écale'],
+      tip:'💗 Cuis-en 6 le samedi, ils se gardent 4-5 jours' }
+  ],
+  'Gourmand & Protéiné (façon "cheat meal healthy")': [
+    { icon:'🩷', name:'Tartine Pizza Protéinée', kcal:350, prot:22,
+      ingredients:['Pain complet — 2 tranches','Concentré de tomate — 1 càs (+ un peu d\'eau pour détendre)','Fromage râpé — 30g','Poulet effiloché ou œuf — un reste (option)','Origan, herbes'],
+      steps:['Étale le concentré de tomate détendu sur le pain','Ajoute le fromage râpé et le poulet effiloché ou l\'œuf émietté si tu en as','Passe 5-7 min au four ou 2-3 min à la poêle couverte jusqu\'à ce que le fromage fonde','Saupoudre d\'origan'],
+      tip:'💗 Le concentré de tomate se garde des mois — un petit tube suffit pour plein de pizzas' },
+    { icon:'💗', name:'Cookie Dough Protéiné (sans cuisson)', kcal:260, prot:15,
+      ingredients:['Flocons d\'avoine — 40g, mixés en poudre','Skyr — 60g','Beurre de cacahuète — 1 càs','Miel — 1 càc','Cacao en poudre non sucré — 1 càc (option)'],
+      steps:['Mixe les flocons d\'avoine pour obtenir une poudre fine (mixeur ou blender)','Mélange avec le skyr, le beurre de cacahuète et le miel jusqu\'à obtenir une pâte épaisse','Ajoute le cacao si tu veux une version chocolat','Mange à la cuillère, directement — c\'est fait pour ça'],
+      tip:'💗 Sans œuf, donc sans risque à manger cru — garde au frigo dans un petit pot 2-3 jours' },
+    { icon:'🌸', name:'Pancakes Épais Protéinés', kcal:390, prot:24,
+      ingredients:['Flocons d\'avoine — 50g','Œuf — 1','Skyr — 80g','Une pincée de levure (option, pour plus de moelleux)','Banane — ½, en tranches (à côté, pas dans la pâte)'],
+      steps:['Mixe les flocons, l\'œuf, le skyr et la levure ensemble jusqu\'à obtenir une pâte lisse et épaisse','Fais cuire à la poêle à feu moyen, 2-3 min de chaque côté (comme un pancake épais)','Sers avec la banane en tranches par-dessus et un filet de miel'],
+      tip:'💗 Le skyr dans la pâte, c\'est le secret pour un pancake moelleux et plus protéiné — la banane reste à côté, pas mélangée' },
+    { icon:'💗', name:'Mug Cake Chocolat 2 min', kcal:300, prot:16,
+      ingredients:['Flocons d\'avoine — 30g, mixés en poudre','Cacao en poudre non sucré — 1 càs','Œuf — 1','Skyr — 2 càs','Lait — 2 càs','Miel ou sucre — 1 càc'],
+      steps:['Mélange tous les ingrédients directement dans un mug ou petit bol allant au micro-ondes','Micro-ondes 2 min à puissance max','Laisse tiédir 1 min avant de manger — le centre reste fondant'],
+      tip:'💗 Le dessert le plus rapide de toute la page — prêt en moins de 5 minutes' }
+  ]
+};
+
+function renderRecettes() {
+  const container = document.getElementById('recettes-content');
+  let html = '';
+  Object.entries(recettes).forEach(([cat, items]) => {
+    html += `<div class="recette-cat">
+      <div class="recette-cat-title"><span>${cat}</span><div class="recette-cat-line"></div></div>
+      ${items.map((r, i) => {
+        const id = `rec_${cat.replace(/\W/g,'')}_${i}`;
+        return `
+        <div class="recette-card">
+          <div class="recette-header" onclick="toggleRecette('${id}')">
+            <span class="recette-icon">${r.icon}</span>
+            <div style="flex:1">
+              <div class="recette-name">${r.name}</div>
+              <div class="recette-meta">${r.kcal} kcal · ${r.prot}g prot</div>
+            </div>
+            <span class="recette-toggle" id="rtoggle_${id}">▼</span>
+          </div>
+          <div class="recette-body" id="rbody_${id}">
+            <div class="recette-divider"></div>
+            <div class="recette-section-label">Ingrédients</div>
+            ${r.ingredients.map(ing => {
+              const p = ing.split(' — ');
+              return `<div class="recette-ingredient"><strong>${p[0]}</strong>${p[1] ? ' — ' + p[1] : ''}</div>`;
+            }).join('')}
+            <div class="recette-section-label" style="margin-top:14px;">Préparation</div>
+            ${r.steps.map((s, n) => `
+              <div class="recette-step">
+                <div class="recette-step-num">${n+1}</div>
+                <div>${s}</div>
+              </div>`).join('')}
+            ${r.tip ? `<div class="recette-tip">${r.tip}</div>` : ''}
+          </div>
+        </div>`;
+      }).join('')}
+    </div>`;
+  });
+  container.innerHTML = html;
+}
+
+function toggleRecette(id) {
+  document.getElementById('rbody_' + id).classList.toggle('open');
+  document.getElementById('rtoggle_' + id).classList.toggle('open');
+}
+
+// ══════════════════════════════════════════════════════
+// COURSES DATA & RENDER
+// ══════════════════════════════════════════════════════
+
+const coursesData = [
+  { cat:'🩷 Viande & poisson', items:[
+    { name:'Poulet (blancs, aiguillettes ou pilons)', qty:'1,2 kg' },
+    { name:'Viande hachée 5%', qty:'500g' },
+    { name:'Poisson blanc ou saumon', qty:'2 pavés (~300g)' }
+  ]},
+  { cat:'🩷 Fer & B9 — à ne pas oublier', items:[
+    { name:'Haricots rouges façon chili', qty:'2 boîtes' },
+    { name:'Avocats', qty:'3' }
+  ]},
+  { cat:'🌸 Œufs & laitages', items:[
+    { name:'Œufs', qty:'18' },
+    { name:'Skyr', qty:'~2 kg (8 pots)' },
+    { name:'Lait', qty:'1 litre' },
+    { name:'Crème légère', qty:'1 petite brique' }
+  ]},
+  { cat:'💗 Vitamine C & fraîcheur', items:[
+    { name:'Poivrons', qty:'4' },
+    { name:'Tomates', qty:'6' },
+    { name:'Concombre', qty:'1' },
+    { name:'Salade verte', qty:'1' },
+    { name:'Citrons', qty:'4' },
+    { name:'Oranges', qty:'3' },
+    { name:'Clémentines', qty:'1 filet' },
+    { name:'Tomates concassées', qty:'2 boîtes' }
+  ]},
+  { cat:'🩷 Légumes & fruits', items:[
+    { name:'Haricots verts (surgelés)', qty:'800g' },
+    { name:'Mix poivrons-carottes-oignons (surgelé)', qty:'400g' },
+    { name:'Courgettes', qty:'3' },
+    { name:'Fraises (fraîches ou surgelées)', qty:'400g' },
+    { name:'Nectarine ou pêche plate', qty:'1' },
+    { name:'Oignons', qty:'3' },
+    { name:'Ail', qty:'1 tête' }
+  ]},
+  { cat:'🩷 Féculents & sucré', items:[
+    { name:'Pommes de terre', qty:'1,5 kg' },
+    { name:'Riz', qty:'500g' },
+    { name:'Flocons d\'avoine', qty:'500g' },
+    { name:'Farine', qty:'500g' },
+    { name:'Pain complet', qty:'1 paquet' },
+    { name:'Sucre & levure', qty:'si tu n\'en as plus' }
+  ]},
+  { cat:'💖 Les finitions', items:[
+    { name:'Oignons frits', qty:'1 sachet' },
+    { name:'Miel', qty:'1 pot' },
+    { name:'Paprika, herbes, ciboulette', qty:'ce qu\'il te manque' },
+    { name:'Huile d\'olive', qty:'1 bouteille' },
+    { name:'Concentré de tomate', qty:'1 petit tube' },
+    { name:'Cacao en poudre non sucré', qty:'1 petit sachet' }
+  ]}
+];
+
+let checkedCourses = JSON.parse(localStorage.getItem('checkedCourses') || '{}');
+
+function renderCourses() {
+  const container = document.getElementById('courses-content');
+  let html = coursesData.map(cat => `
+    <div class="courses-cat">
+      <div class="courses-cat-title"><span>${cat.cat}</span><div class="courses-cat-line"></div></div>
+      <div class="courses-grid">
+        ${cat.items.map((item, i) => {
+          const key = `${cat.cat}_${i}`;
+          const checked = checkedCourses[key] ? 'checked' : '';
+          return `<div class="course-item ${checked}" onclick="toggleCourse('${key}', this)">
+            <div class="course-check"></div>
+            <div>
+              <div class="course-name">${item.name}</div>
+              <div class="course-qty">${item.qty}</div>
+            </div>
+          </div>`;
+        }).join('')}
+      </div>
+    </div>`).join('');
+  html += `<div style="background:var(--gold-light);border-radius:14px;padding:14px;margin-top:8px;font-size:13px;color:var(--gold);border:1px solid rgba(142,42,80,0.2);">
+    <strong>💗 Meal prep du samedi 14h</strong><br>
+    Poulet citron-poivre ×4 (samedi soir, dimanche, mercredi midi) · bœuf & purée ×2 (lundi) · chili poulet ×2 (mardi) · 6 œufs durs · le gâteau au skyr. Les boîtes de mardi et mercredi vont au congélateur. Dès novembre, petite session le mercredi soir pour jeudi et vendredi.
+  </div>`;
+  container.innerHTML = html;
+}
+
+function toggleCourse(key, el) {
+  el.classList.toggle('checked');
+  checkedCourses[key] = el.classList.contains('checked');
+  localStorage.setItem('checkedCourses', JSON.stringify(checkedCourses));
+}
+
+function resetCourses() {
+  checkedCourses = {};
+  localStorage.setItem('checkedCourses', JSON.stringify(checkedCourses));
+  renderCourses();
+}
+
+// ══════════════════════════════════════════════════════
+// NAVIGATION
+// ══════════════════════════════════════════════════════
+
+const GROUPS = {
+  sport:    [['sport','Mes séances'], ['mobilite','Souplesse']],
+  assiette: [['nutrition','Mon plan'], ['recettes','Recettes'], ['courses','Courses']],
+  suivi:    [['perf','Mes perfs'], ['mensurations','Mon corps']]
+};
+const lastPage = { sport:'sport', assiette:'nutrition', suivi:'perf' };
+let currentGroup = 'sport';
+
+function showGroup(g) {
+  currentGroup = g;
+  document.querySelectorAll('.nav-item').forEach(n => n.classList.toggle('active', n.dataset.group === g));
+  showPage(lastPage[g]);
+}
+
+function showPage(id) {
+  lastPage[currentGroup] = id;
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  document.getElementById('page-' + id).classList.add('active');
+  document.getElementById('subnav').innerHTML = '<div class="subnav-in">' + GROUPS[currentGroup].map(([pid, label]) =>
+    `<button class="chip${pid === id ? ' active' : ''}" onclick="showPage('${pid}')">${label}</button>`).join('') + '</div>';
+  window.scrollTo(0, 0);
+}
+
+function renderHero() {
+  const days = Math.max(0, Math.ceil((MARIAGE - new Date()) / 86400000));
+  document.getElementById('hero-days').textContent = days;
+  const p = phaseActuelle();
+  document.getElementById('hero-phase').innerHTML = `<span>${p.emoji}</span> ${p.nom}`;
+}
+
+function renderTodaySession() {
+  const box = document.getElementById('today-session');
+  if (!box) return;
+  const d = new Date().getDay();
+  const s = sport.find(x => x.day === d);
+  if (!s) { box.innerHTML = ''; return; }
+  const sub = s.isRest ? (s.restText || '') : (s.exercises && s.exercises.length ? s.exercises.length + ' exercices · ' + (s.warmup && s.warmup.length ? 'avec échauffement' : '') : 'Cardio · haut du corps');
+  box.innerHTML = `
+    <div class="today-session" onclick="openTodaySport(${d})">
+      <div class="ts-k">Aujourd'hui · ${DAYS[d]}</div>
+      <div class="ts-t">${s.label}</div>
+      ${sub ? `<div class="ts-s">${sub}</div>` : ''}
+      <div class="ts-go">Voir ma séance ↓</div>
+    </div>`;
+}
+
+function openTodaySport(d) {
+  const body = document.getElementById('sport-body-' + d);
+  if (body && !body.classList.contains('open')) toggleSport(d);
+  const card = body && body.closest('.sport-day-card');
+  if (card) card.scrollIntoView({ behavior: 'smooth', block: 'start' });
+}
+
+// ══════════════════════════════════════════════════════
+// PHASES & COMPTE À REBOURS
+// ══════════════════════════════════════════════════════
+
+const MARIAGE = new Date(2027, 9, 29); // 29 octobre 2027
+
+const PHASES = [
+  { fin: new Date(2027, 0, 1), nom: 'Phase 1 · Réparation', emoji: '🩷',
+    objectif: 'Remonter ton fer et retrouver de l\'énergie. On installe les 4 séances, on marche, on ne cherche aucun record.',
+    focus: 'Charges tenues, pas de PR · Marche 8 000 à 10 000 pas · Sommeil 7 à 9h · Manger à l\'équilibre, pas en gros déficit — la récupération passe avant la perte de gras.' },
+  { fin: new Date(2027, 3, 1), nom: 'Phase 2 · Construction', emoji: '🎀',
+    objectif: 'Ton hémoglobine est remontée : c\'est maintenant qu\'on construit. Progression réelle sur le hip thrust, la presse et les élévations latérales.',
+    focus: 'Ajoute du poids ou une répétition toutes les 1 à 2 semaines · Une semaine allégée toutes les 6 à 8 semaines · Protéines à chaque repas, sans faute.' },
+  { fin: new Date(2027, 7, 1), nom: 'Phase 3 · Affinage', emoji: '💗',
+    objectif: 'Révéler ce que tu as construit. Même entraînement — surtout ne rien lâcher sur les charges — et déficit modéré.',
+    focus: 'Déficit doux, jamais brutal · Tu peux réintroduire du HIIT 1 à 2 fois par semaine pour la vivacité · Mensurations une fois par mois, pas la balance.' },
+  { fin: new Date(2027, 9, 30), nom: 'Phase 4 · Finition', emoji: '🤍',
+    objectif: 'Arriver reposée, pas épuisée. Maintien, aucun régime de dernière minute.',
+    focus: 'Zéro restriction extrême — c\'est ce qui abîme la peau, les cheveux et l\'énergie · Soins visage et cheveux · Essayages · Sommeil prioritaire.' }
+];
+
+function phaseActuelle() {
+  const now = new Date();
+  for (const p of PHASES) { if (now < p.fin) return p; }
+  return { nom: 'Le grand jour 🤍', emoji: '🤍', objectif: 'Tu y es.', focus: '' };
+}
+
+function semainesAvantMariage() {
+  const diff = MARIAGE - new Date();
+  return Math.max(0, Math.ceil(diff / (1000 * 60 * 60 * 24 * 7)));
+}
+
+function phaseHTML() {
+  const p = phaseActuelle();
+  const s = semainesAvantMariage();
+  return `
+    <div class="phase-card">
+      <div class="phase-top">
+        <div class="phase-name">${p.emoji} ${p.nom}</div>
+        <div class="phase-count"><b>${s}</b><span>semaines</span></div>
+      </div>
+      <div class="phase-goal">${p.objectif}</div>
+      ${p.focus ? `<div class="phase-focus">${p.focus}</div>` : ''}
+    </div>`;
+}
+
+function renderPhase() {
+  const a = document.getElementById('phase-banner');
+  const b = document.getElementById('phase-banner-sport');
+  if (a) a.innerHTML = phaseHTML();
+  if (b) b.innerHTML = phaseHTML();
+}
+
+// ══════════════════════════════════════════════════════
+// TODAY BANNER
+// ══════════════════════════════════════════════════════
+
+function renderTodayBanner() {
+  const today = new Date().getDay();
+  const data = nutrition[today];
+  if (!data) return;
+  const banner = document.getElementById('today-banner');
+  banner.innerHTML = `
+    <div class="today-banner">
+      <div class="today-banner-left">
+        <h2>${DAYS[today]}</h2>
+        <p>${data.label}</p>
+      </div>
+      <div class="today-banner-right">
+        <div class="kcal">${data.kcal}</div>
+        <div class="kcal-label">kcal · ${data.prot}g prot</div>
+      </div>
+    </div>`;
+}
+
+// ══════════════════════════════════════════════════════
+// NUTRITION
+// ══════════════════════════════════════════════════════
+
+function renderNutritionDays() {
+  const now = new Date();
+  const today = now.getDay();
+  const container = document.getElementById('nutrition-days');
+  const order = [1,2,3,4,5,6,0];
+  function getDateForDay(targetDay) {
+    const diff = targetDay - today;
+    const d = new Date(now);
+    d.setDate(now.getDate() + diff);
+    return d.getDate();
+  }
+  container.innerHTML = order.map(d => `
+    <div class="day-btn ${d === selectedNutritionDay ? 'active' : ''} ${d === today && d !== selectedNutritionDay ? 'today' : ''}"
+         onclick="selectNutritionDay(${d})">
+      <div class="day-short">${DAYS_SHORT[d]}</div>
+      <div class="day-num">${getDateForDay(d)}</div>
+    </div>`).join('');
+}
+
+function selectNutritionDay(day) {
+  selectedNutritionDay = day;
+  renderNutritionDays();
+  renderNutritionContent(day);
+}
+
+function renderNutritionContent(day) {
+  const data = nutrition[day];
+  const container = document.getElementById('nutrition-content');
+  if (!data) return;
+
+  let html = data.meals.map((meal, i) => `
+    <div class="meal-card">
+      <div class="meal-card-header" onclick="toggleMeal('${day}_${i}')">
+        <span class="meal-icon">${meal.icon}</span>
+        <div class="meal-title-wrap">
+          <div class="meal-name">${meal.name}</div>
+          <div class="meal-recipe-name">${meal.recipe}</div>
+          ${meal.focus === 'fer+b9' ? '<span class="focus-tag focus-fer">🩷 Fer + B9</span>' : meal.focus === 'fer' ? '<span class="focus-tag focus-fer">🩷 Riche en fer</span>' : meal.focus === 'b9' ? '<span class="focus-tag focus-b9">🌷 Riche en B9</span>' : ''}
+        </div>
+        <div class="meal-badges">
+          <span class="badge badge-k">${meal.kcal}</span>
+          <span class="badge badge-p">${meal.prot}g</span>
+        </div>
+        <span class="meal-toggle" id="toggle-${day}_${i}">▼</span>
+      </div>
+      <div class="meal-body" id="meal-${day}_${i}">
+        <div class="meal-divider"></div>
+        ${meal.items.map(item => {
+          const parts = item.split(' — ');
+          return `<div class="meal-item"><strong>${parts[0]}</strong>${parts[1] ? ' — ' + parts[1] : ''}</div>`;
+        }).join('')}
+        ${meal.tip ? `<div class="meal-tip">${meal.tip}</div>` : ''}
+      </div>
+    </div>`).join('');
+
+  // Total
+  html += `
+    <div style="background:var(--card);border:1px solid var(--border);border-radius:16px;margin:0 16px 16px;padding:18px;display:flex;justify-content:space-between;align-items:center;">
+      <div>
+        <div style="font-family:'Cormorant Garamond',serif;font-size:18px;font-style:italic;color:var(--rose)">Total ${DAYS[day]}</div>
+        <div style="font-size:11px;color:var(--muted);margin-top:2px;font-weight:300">${data.label}</div>
+      </div>
+      <div style="display:flex;gap:12px">
+        <div style="text-align:center">
+          <div style="font-size:22px;font-weight:700;color:var(--text)">${data.kcal}<span style="font-size:13px;color:var(--green);margin-left:3px">✓</span></div>
+          <div style="font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:1px">kcal</div>
+        </div>
+        <div style="text-align:center">
+          <div style="font-size:22px;font-weight:700;color:var(--text)">${data.prot}g<span style="font-size:13px;color:var(--green);margin-left:3px">✓</span></div>
+          <div style="font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:1px">protéines</div>
+        </div>
+      </div>
+    </div>`;
+
+  container.innerHTML = html;
+}
+
+function toggleMeal(id) {
+  const body = document.getElementById('meal-' + id);
+  const toggle = document.getElementById('toggle-' + id);
+  body.classList.toggle('open');
+  toggle.classList.toggle('open');
+}
+
+// ══════════════════════════════════════════════════════
+// SPORT
+// ══════════════════════════════════════════════════════
+
+function normalizePerfName(str) {
+  return str.toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g, '').trim();
+}
+
+function getLastPerfFor(exerciseName) {
+  const target = normalizePerfName(exerciseName);
+  // performances est trié du plus récent au plus ancien (unshift à l'enregistrement)
+  return performances.find(p => {
+    const pName = normalizePerfName(p.exercise);
+    return target.includes(pName) || pName.includes(target);
+  });
+}
+
+function renderTargetTag(exerciseName) {
+  const last = getLastPerfFor(exerciseName);
+  if (!last) return '';
+  if (last.mode === 'equal') {
+    return `<div class="perf-target">🎀 Dernière fois (${last.date}) : <strong>${last.weight}kg × ${last.reps}</strong> sur ${last.sets} séries — vise +1 rep ou +1-2kg aujourd'hui</div>`;
+  }
+  const seriesTxt = (last.series || []).map(s => `${s.weight}kg×${s.reps}`).join(', ');
+  return `<div class="perf-target">🎀 Dernière fois (${last.date}) : <strong>${seriesTxt}</strong> — essaie de battre au moins une série</div>`;
+}
+
+function renderSport() {
+  const today = new Date().getDay();
+  const container = document.getElementById('sport-content');
+  const order = [1,2,3,4,5,6,0];
+
+  container.innerHTML = order.map(d => {
+    const s = sport.find(x => x.day === d);
+    if (!s) return '';
+    const isToday = d === today;
+
+    if (s.isRest && !s.isCardio) {
+      return `
+        <div class="sport-day-card">
+          <div class="sport-day-header" onclick="toggleSport(${d})">
+            <span class="sport-day-icon">${s.icon}</span>
+            <div class="sport-day-info">
+              <div class="sport-day-name">${s.name} <em>— ${s.label}</em></div>
+              <div class="sport-day-sub">${s.restText}</div>
+            </div>
+            ${isToday ? '<span class="sport-today-badge">AUJOURD\'HUI</span>' : ''}
+            <span class="sport-day-toggle" id="sport-toggle-${d}">▼</span>
+          </div>
+          <div class="sport-day-body" id="sport-body-${d}">
+            <div class="stretch-section">
+              <strong>✿ Activités</strong>
+              ${s.activities.map(a => `<div class="stretch-item">${a}</div>`).join('')}
+            </div>
+          </div>
+        </div>`;
+    }
+
+    if (s.isCardio) {
+      return `
+        <div class="sport-day-card">
+          <div class="sport-day-header" onclick="toggleSport(${d})">
+            <span class="sport-day-icon">${s.icon}</span>
+            <div class="sport-day-info">
+              <div class="sport-day-name">${s.name} <em>— ${s.label}</em></div>
+              <div class="sport-day-sub">Cardio · Fessiers léger · Abdos · Massage · Mobilité</div>
+            </div>
+            ${isToday ? '<span class="sport-today-badge">AUJOURD\'HUI</span>' : ''}
+            <span class="sport-day-toggle" id="sport-toggle-${d}">▼</span>
+          </div>
+          <div class="sport-day-body" id="sport-body-${d}">
+            <div class="exercise">
+              <div class="exercise-header">
+                <div>
+                  <div class="exercise-num">Cardio principal</div>
+                  <div class="exercise-name">🎀 ${s.cardio.type}</div>
+                </div>
+                <div class="exercise-sets">${s.cardio.duration}</div>
+              </div>
+              <div class="exercise-charge">💗 ${s.cardio.speed} · inclinaison ${s.cardio.incline}</div>
+              <div class="exercise-tips"><div class="exercise-tip">${s.cardio.tip}</div></div>
+            </div>
+            ${s.postCardio ? `
+            <div class="warmup" style="background:var(--rose-light);margin-top:10px;">
+              <strong style="color:var(--rose);">🎀 Fessiers léger — après cardio · optionnel si tu es fatiguée</strong>
+            </div>
+            ${s.postCardio.map((ex, i) => `
+            <div class="exercise">
+              <div class="exercise-header">
+                <div>
+                  <div class="exercise-num">Exercice ${i+1}</div>
+                  <div class="exercise-name">${ex.name}</div>
+                </div>
+                <div class="exercise-sets">${ex.sets}</div>
+              </div>
+              <div class="exercise-charge">💗 ${ex.charge}</div>
+              ${renderTargetTag(ex.name)}
+              <div class="exercise-tips">
+                ${ex.tips.map(t => `<div class="exercise-tip">${t}</div>`).join('')}
+              </div>
+              <span class="rest-tag" onclick="openTimer('${ex.name}', ${parseRestSeconds(ex.rest)})">⏱ Repos ${ex.rest} · Tap pour timer</span>
+            </div>`).join('')}` : ''}
+            ${s.abdo && s.abdo.length > 0 ? `
+            <div class="warmup" style="background:var(--green-light);margin-top:10px;">
+              <strong style="color:var(--green);">✿ Abdos & Core</strong>
+              ${s.abdo.map(a => `<div class="warmup-item" style="color:var(--green);">${a}</div>`).join('')}
+            </div>` : ''}
+            <div class="stretch-section">
+              <strong>✿ Mobilité hanches</strong>
+              ${s.stretch.map(st => `<div class="stretch-item">${st}</div>`).join('')}
+            </div>
+          </div>
+        </div>`;
+    }
+
+    return `
+      <div class="sport-day-card">
+        <div class="sport-day-header" onclick="toggleSport(${d})">
+          <span class="sport-day-icon">${s.icon}</span>
+          <div class="sport-day-info">
+            <div class="sport-day-name">${s.name} <em>— ${s.label}</em></div>
+            <div class="sport-day-sub">${s.exercises.length} exercices · ${s.warmup.length > 0 ? 'Avec échauffement' : ''}</div>
+          </div>
+          ${isToday ? '<span class="sport-today-badge">AUJOURD\'HUI</span>' : ''}
+          <span class="sport-day-toggle" id="sport-toggle-${d}">▼</span>
+        </div>
+        <div class="sport-day-body" id="sport-body-${d}">
+          ${s.warmup.length > 0 ? `
+          <div class="warmup">
+            <strong>✿ Échauffement</strong>
+            ${s.warmup.map(w => `<div class="warmup-item">${w}</div>`).join('')}
+          </div>` : ''}
+          ${s.exercises.map((ex, i) => `
+          <div class="exercise">
+            <div class="exercise-header">
+              <div>
+                <div class="exercise-num">Exercice ${i+1}</div>
+                <div class="exercise-name">${ex.name}</div>
+              </div>
+              <div class="exercise-sets">${ex.sets}</div>
+            </div>
+            <div class="exercise-charge">💗 ${ex.charge}</div>
+            ${renderTargetTag(ex.name)}
+            <div class="exercise-tips">
+              ${ex.tips.map(t => `<div class="exercise-tip">${t}</div>`).join('')}
+            </div>
+            <span class="rest-tag" onclick="openTimer('${ex.name}', ${parseRestSeconds(ex.rest)})">⏱ Repos ${ex.rest} · Tap pour timer</span>
+          </div>`).join('')}
+          ${s.abdo ? `
+          <div class="warmup" style="margin-top:10px">
+            <strong>✿ Abdos & Transverse</strong>
+            ${s.abdo.map(a => `<div class="warmup-item">${a}</div>`).join('')}
+          </div>` : ''}
+          <div class="stretch-section">
+            <strong>✿ Étirements fin de séance</strong>
+            ${s.stretch.map(st => `<div class="stretch-item">${st}</div>`).join('')}
+          </div>
+        </div>
+      </div>`;
+  }).join('');
+
+  // Auto-ouvrir aujourd'hui
+  const todayBody = document.getElementById('sport-body-' + today);
+  const todayToggle = document.getElementById('sport-toggle-' + today);
+  if (todayBody) { todayBody.classList.add('open'); todayToggle.classList.add('open'); }
+}
+
+function toggleSport(day) {
+  const body = document.getElementById('sport-body-' + day);
+  const toggle = document.getElementById('sport-toggle-' + day);
+  body.classList.toggle('open');
+  toggle.classList.toggle('open');
+}
+
+// ══════════════════════════════════════════════════════
+// PERFORMANCES
+// ══════════════════════════════════════════════════════
+
+let setsMode = 'equal';
+let progressiveSeriesCount = 0;
+
+function togglePerfForm() {
+  const form = document.getElementById('perf-form');
+  form.classList.toggle('open');
+  if (form.classList.contains('open')) {
+    // Reset au mode égal par défaut
+    setSetsMode('equal');
+    resetProgressiveSeries();
+  }
+}
+
+function setSetsMode(mode) {
+  setsMode = mode;
+  document.getElementById('mode-equal').style.display = mode === 'equal' ? 'block' : 'none';
+  document.getElementById('mode-progressive').style.display = mode === 'progressive' ? 'block' : 'none';
+
+  const btnEqual = document.getElementById('btn-equal');
+  const btnProg = document.getElementById('btn-progressive');
+
+  if (mode === 'equal') {
+    btnEqual.style.background = 'var(--rose)';
+    btnEqual.style.borderColor = 'var(--rose)';
+    btnEqual.style.color = 'white';
+    btnProg.style.background = 'var(--card2)';
+    btnProg.style.borderColor = 'var(--border)';
+    btnProg.style.color = 'var(--muted)';
+  } else {
+    btnProg.style.background = 'var(--rose)';
+    btnProg.style.borderColor = 'var(--rose)';
+    btnProg.style.color = 'white';
+    btnEqual.style.background = 'var(--card2)';
+    btnEqual.style.borderColor = 'var(--border)';
+    btnEqual.style.color = 'var(--muted)';
+    // Ajouter 2 séries par défaut si vide
+    if (progressiveSeriesCount === 0) {
+      addProgressiveSerie();
+      addProgressiveSerie();
+    }
+  }
+}
+
+function resetProgressiveSeries() {
+  progressiveSeriesCount = 0;
+  document.getElementById('progressive-series').innerHTML = '';
+}
+
+function addProgressiveSerie() {
+  progressiveSeriesCount++;
+  const n = progressiveSeriesCount;
+  const container = document.getElementById('progressive-series');
+  const div = document.createElement('div');
+  div.id = 'serie-' + n;
+  div.style.cssText = 'display:flex;gap:8px;align-items:center;margin-bottom:10px;';
+  div.innerHTML = `
+    <span style="font-size:11px;color:var(--muted);font-weight:600;min-width:28px;text-align:center;">S${n}</span>
+    <input class="form-input" type="number" placeholder="kg" step="0.5"
+      id="prog-weight-${n}" style="flex:1;">
+    <input class="form-input" type="number" placeholder="reps"
+      id="prog-reps-${n}" style="flex:1;">
+    ${n > 1 ? `<span onclick="removeSerie(${n})" style="color:var(--muted);font-size:18px;cursor:pointer;padding:4px;">✕</span>` : '<span style="width:26px;"></span>'}
+  `;
+  container.appendChild(div);
+}
+
+function removeSerie(n) {
+  const el = document.getElementById('serie-' + n);
+  if (el) el.remove();
+}
+
+function savePerf() {
+  const exercise = document.getElementById('perf-exercise').value;
+  const notes = document.getElementById('perf-notes').value;
+  const date = new Date().toLocaleDateString('fr-FR', { day:'numeric', month:'short', year:'numeric' });
+
+  let entry;
+
+  if (setsMode === 'equal') {
+    const weight = parseFloat(document.getElementById('perf-weight').value);
+    const reps = parseInt(document.getElementById('perf-reps').value);
+    const sets = parseInt(document.getElementById('perf-sets').value) || 1;
+    if (!weight || !reps) { alert('Remplis la charge et les reps !'); return; }
+    entry = { id: Date.now(), exercise, mode: 'equal', weight, reps, sets, notes, date };
+  } else {
+    // Récupérer toutes les séries progressives
+    const series = [];
+    const divs = document.querySelectorAll('#progressive-series > div');
+    divs.forEach(div => {
+      const n = div.id.replace('serie-', '');
+      const w = parseFloat(document.getElementById('prog-weight-' + n)?.value);
+      const r = parseInt(document.getElementById('prog-reps-' + n)?.value);
+      if (w && r) series.push({ weight: w, reps: r });
+    });
+    if (series.length === 0) { alert('Ajoute au moins une série !'); return; }
+    entry = { id: Date.now(), exercise, mode: 'progressive', series, notes, date };
+  }
+
+  performances.unshift(entry);
+  localStorage.setItem('performances', JSON.stringify(performances));
+
+  // Reset form
+  document.getElementById('perf-weight') && (document.getElementById('perf-weight').value = '');
+  document.getElementById('perf-reps') && (document.getElementById('perf-reps').value = '');
+  document.getElementById('perf-sets') && (document.getElementById('perf-sets').value = '');
+  document.getElementById('perf-notes').value = '';
+  resetProgressiveSeries();
+  document.getElementById('perf-form').classList.remove('open');
+
+  renderPerf();
+}
+
+function deletePerf(id) {
+  performances = performances.filter(p => p.id !== id);
+  localStorage.setItem('performances', JSON.stringify(performances));
+  renderPerf();
+}
+
+function renderPerf() {
+  const container = document.getElementById('perf-content');
+  if (performances.length === 0) {
+    container.innerHTML = `
+      <div class="empty-perf">
+        <div class="empty-icon">🖤</div>
+        <p>Aucune perf enregistrée.<br>Commence ta première séance ! 🎀</p>
+      </div>`;
+    return;
+  }
+
+  // Grouper par exercice, garder seulement les 4 dernières
+  const grouped = {};
+  performances.forEach(p => {
+    if (!grouped[p.exercise]) grouped[p.exercise] = [];
+    grouped[p.exercise].push(p);
+  });
+  // Limiter à 4 par exercice
+  Object.keys(grouped).forEach(k => { grouped[k] = grouped[k].slice(0, 4); });
+
+  container.innerHTML = Object.entries(grouped).map(([exercise, entries]) => {
+    // PR = charge max toutes entrées confondues
+    const allWeights = entries.flatMap(e =>
+      e.mode === 'progressive' ? e.series.map(s => s.weight) : [e.weight]
+    );
+    const maxWeight = Math.max(...allWeights);
+
+    return `
+      <div class="perf-exercise-group">
+        <div class="perf-exercise-title">
+          <h4>${exercise}</h4>
+          <span class="perf-count">${entries.length} entrée${entries.length > 1 ? 's' : ''}</span>
+          <span style="font-size:11px;color:var(--gold);font-weight:600">PR: ${maxWeight}kg 💗</span>
+        </div>
+        ${entries.map(e => {
+          if (e.mode === 'progressive') {
+            const eMax = Math.max(...e.series.map(s => s.weight));
+            return `
+            <div class="perf-entry" style="flex-direction:column;align-items:flex-start;gap:8px;">
+              <div style="display:flex;justify-content:space-between;width:100%;align-items:center;">
+                <div class="perf-entry-date">${e.date} · <span style="color:var(--rose);font-weight:600;">↑ Progressives</span></div>
+                <span class="perf-delete" onclick="deletePerf(${e.id})">✕</span>
+              </div>
+              <div style="display:flex;flex-wrap:wrap;gap:6px;">
+                ${e.series.map((s, i) => `
+                  <div style="background:var(--card2);border:1px solid var(--border);border-radius:8px;padding:5px 10px;font-size:12px;">
+                    <span style="color:var(--muted);font-size:10px;">S${i+1} </span>
+                    <span style="font-weight:700;color:var(--text);">${s.weight}kg</span>
+                    ${s.weight === maxWeight ? '<span class="perf-pr">PR</span>' : ''}
+                    <span style="color:var(--muted);"> × ${s.reps}</span>
+                  </div>`).join('')}
+              </div>
+              ${e.notes ? `<div class="perf-note">"${e.notes}"</div>` : ''}
+            </div>`;
+          } else {
+            return `
+            <div class="perf-entry">
+              <div class="perf-entry-left">
+                <div class="perf-entry-date">${e.date}</div>
+                <div class="perf-entry-vals">
+                  <div class="perf-val">${e.weight}<span> kg</span>${e.weight === maxWeight ? '<span class="perf-pr">PR</span>' : ''}</div>
+                  <div class="perf-val">${e.reps}<span> reps</span></div>
+                  <div class="perf-val">${e.sets}<span> séries</span></div>
+                </div>
+                ${e.notes ? `<div class="perf-note">"${e.notes}"</div>` : ''}
+              </div>
+              <span class="perf-delete" onclick="deletePerf(${e.id})">✕</span>
+            </div>`;
+          }
+        }).join('')}
+      </div>`;
+  }).join('');
+}
+</script>
+
+</body></html>
